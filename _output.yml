@@ -1,0 +1,18 @@
+bookdown::gitbook:
+  css: style.css
+  config:
+    toc:
+      before: |
+        <li><a href="./">Creating Novel Sensorimotor Responses in Auditory Cortex</a></li>
+    download: ["pdf", "epub"]
+  split_by: "section"
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+    before_body: titlepage.tex
+  latex_engine: xelatex
+  toc: false
+  toc_unnumbered: false
+  citation_package: natbib
+  keep_tex: yes
+bookdown::epub_book: default

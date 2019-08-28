@@ -1,0 +1,178 @@
+# Methods
+
+The dissertation investigated the emergence of novel sensorimotor contingencies by three main questions, asking whether the mice have learned a sound-driven strategy in order to solve the task (*Acquisition*), whether there is evidence that auditory cortex represents the novel contingency, in particular using mismatch signals (**Representation**), and, if that is the task, how it integrates the evidence from auditory input and from the sensorimotor model in its state estimation (**Integration**). These questions were investigated using targeted perturbations of the task paradigm and analysing the resulting behavioral and neural data.
+
+## Main Paradigm
+
+Eleven transgenic mice expressing Ai95D-CaMP6f x CaMK2a-Cre in three batches, a male one (GTMK44.3a-c) and two female ones (GTMK44.3e-h; GTMK44.4d-g), were water-restricted and trained on the task. They navigated the tonespace by transversing across six tones per octave. In the beginning, the task was restricted to one octave. As they began adopting sensible behavior, the paradigm was switched to two and then three octaves. The middle tone had a frequency of 11.3 kHz (sound ID: 0) and the other tones were logarithmically placed around it. In the case of one (two; three) octave, there were three (six; nine) tones to each side of the middle sound. The mice were rewarded for sound IDs between -1 and 1 on the side on which they had last licked. Examples for behavioral sequences can be found in figure \@ref(fig:event-examples). Each task block lasted for about 10 mins and several of these blocks were acquired per animal per day.
+
+The first two batches were pretrained in behavioral boxes using Python [@python] and a Raspberry Pi to control the task paradigm. This purpose required the packages 'numpy' [@oliphant2006numpy; @vanderwalt2011numpy], 'random', 'time', 'multiprocessing', 'RPi.GPIO', 'csv', 'requests', 'pygame', and 'sys'. The mice were subsequently moved to the setup under the microscope, which was controlled using Matlab (&copy; Mathworks) and Psychtoolbox [@brainard1997psychtoolbox; @pelli1997psychtoolbox; @kleiner2007psychtoolbox]. The second female batch (i. e. GTMK44.4d-g) was trained under the microscope from the beginning.
+
+Each sound was presented for 200 ms, with stimulus onset being 500 ms apart. Throughout these 500 ms, the number of left licks $n_l$ and the number of right licks $n_r$ was detected using an electrical lick-detection circuit as described by @slotnick2009lick that was connected to the Raspberry Pi in the behavioral boxes and an NI board under the microscope. The sound ID then changed according to the formula
+
+\begin{equation*}
+\Delta_{\text{RL}}=2\cdot\left(\log(n_l+1)-\log(n_r+1)\right), \quad 
+\Delta_{\text{LR}}=2\cdot\left(\log(n_r+1)-\log(n_l+1)\right),
+\end{equation*}
+
+where the change was rounded to the nearest integer and the resulting sound ID was capped off according to the number of octaves. $\Delta_{\text{RL}}$ was used in the case of the RL-contingency and $\Delta_{\text{LR}}$ was used in the case of the LR-contingency.
+
+While the mice were under the microscope setup, activity in the auditory cortex was recorded using 2-photon imaging through a cranial window. At first, the approximate locations of Primary (A1) and Secondary Auditory Cortex (A2) as well as the Anterior Auditory Field (AAF) were determined. Throughout different days, these areas were then recorded during the task. The microscope was controlled using ScanImage [@scanimage]. Neural data was acquired from ten mice. GTMK44.3f could not be imaged due to a malformed headbar.
+
+## Behavioral Paradigm
+
+Targeted violations of the behavioral paradigm allowed for an investigation of the three questions and are going to be investigated below.
+
+### The Acquisition Question: Strategy Perturbations
+
+The first step to answer the Acquisition Question regarded observing behavior during the normal task. Different sounds essentially induced different strategies: 'Lick Left!', 'Lick Right!', and 'Success!'. The former two are of interest for this question. A first indicator that the mice had solved the task would be given if their licking behavior was consistent with these strategies. Put differently, successful mice would lick to the left more often when the correct strategy was 'Lick Left!', and would lick to the right more often when the correct strategy was 'Lick Right!'.
+
+However, a necessary condition for task acquisition was defined as sound-guided behavior. Whereas the observation above is therefore necessary for mice to have learned the task, it is not sufficient, since it does not rule out an alternative explanations only taking into account learned motor patterns. In particular, suppose that the mouse had learned to follow up on lick bouts to the left with lick bouts to the right, and to follow up on lick bouts to the right with lick bouts to the left. Following this strategy, the mice would be in an area after the first bout, where switching bout direction would always be correct, therefore satisfying the previous condition without solving the task.
+
+This motivates Strategy Perturbations, in which large sudden perturbations of the frequency may lead to a different strategy or the same one. In the period after such a randomly initiated perturbation, the behavior is therefore only driven by the sound. If the behavior after a jump from 'Lick Left!' to 'Lick Right!' is therefore more consistent with the behavior under a 'Lick Right!' strategy than the behavior under a 'Lick Left!' strategy, this behavior can only be induced by the sound. This test can therefore determine whether the mice have indeed learned the task -- and therefore answer the Acquisition Question.
+
+### The Representation Question: Sensorimotor and Reward Perturbations
+
+Since Strategy Perturbation constitute not only sensorimotor oddballs, but also sensory oddballs, they cannot demonstrate whether auditory cortex represents the sensorimotor contingency. Put differently, it is to be expected that neurons fire differently in response to Strategy Perturbations merely because of their sensory irregularity. This motivates the introduction of Sensorimotor Perturbations, which are no sensory oddballs, but break the sensorimotor contingency, therefore being sensorimotor oddballs. If neurons represent these perturbations, this demonstrate motor feedback to the auditory cortex encoding the novel sensorimotor contingency.
+
+### The Integration Question: Level Modulations
+
+Finally, Sensorimotor Perturbations are necessary, but not sufficient to shed light on the integration of sensory input and motor behavior in the auditory cortex. Under a multimodal framework, a less reliable auditory input would lead to more important motor predictions. The induced changes in auditory cortex would allow to test a computational model of sensorimotor integration. This motivates the introduction of Sound Modulations. In selected sessions, tones were not only presented at the usual 60-65 dB, but also at 40-45 dB, which decreases the reliability of the auditory input. This provided a first insight into the Integration Question. However, Sound Modulations were scarcely introduced, since the mice might have perceived them as task-relevant, which would have hindered their learning.
+
+## Data Analysis
+
+The neural and behavioral analysis pipeline can be found in the Python package 'toneworld' that will be made available upon request. It made use of the packages ...
+
+### Event-based analysis
+
+By comparing the behavioral and neural activity after a certain event to its baseline prior to the event, this event's effect on spiking patterns and licking behavior could be assessed. 
+
+Mainly, the effects induced by different groups of sounds were of interest. This includes the Strategy Events and Strategy Perturbations as well as all other events described in the previous section. Furthermore general lick bouts were analysed. A left or right lick bout is defined as a lick into the corresponding direction with no lick into this direction for the previous $d$ seconds. For the purpose of this analysis, $d=0.5$. Particularly interesting sound events were Strategy Events, Strategy Perturbations, Sensorimotor Perturbations, modulated sound levels, and generally sound ID. The first four have already been motivated as means to answer these four questions. Sound ID (i. e. sound frequency) is a useful event type because neurons in auditory cortex are tuned to certain frequencies. To avoid an overabundance of centering events, only changing sounds were chosen as centering events.
+
+Strategy Events were grouped into two groups: 'Lick Left!' and 'Lick Right!'.  The strategy 'Success!' was largely ommitted, as it did not have clear implications for future behavior. Furthermore, sound perturbations were grouped into Strategy Perturbations that changed the strategy and those that did not. Finally, the sounds were grouped into whether they broke the sensorimotor contingency or did not (Sensorimotor Perturbations). Examples of those four kinds of contingencies can be found in figure \@ref(fig:event-examples).
+
+```{python event-examples-prep}
+ex_lick_bouts = tw.CenteredData(
+    tw.LickBout(windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'], days = ['2019-07-01'], blocks = ['C'],
+    sounds = True, center_columns = ['licks', 'rewards']
+)
+event = (
+    ex_lick_bouts.event_illustration(selection = tw.BusySelection(2, 40, 22)) +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+gg.ggsave(event, filename = 'figs/ee-bouts.pdf')
+strat = tw.CenteredData(
+    tw.SoundEvents(groups = ['strategy'], filters = ['nosuccess', 'change'],
+                   windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'], days = ['2019-07-01'], blocks = ['C'],
+    sounds = True, center_columns = ['licks', 'rewards']
+)
+strat_event = (
+    strat.event_illustration(selection = tw.BusySelection(2,20,234)) +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+gg.ggsave(strat_event, filename = 'figs/ee-strategy.pdf')
+ex_pert = tw.CenteredData(
+    tw.SoundEvents(groups = ['strategy', 'strategy_perturbation'], 
+                   filters = ['nosuccess', 'perturbation'],
+                   windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'], days = ['2019-07-01'],
+    center_columns = ['licks', 'rewards'], sounds = True
+)
+pert_event = (
+    ex_pert.event_illustration(selection = tw.SimpleSelection(1, 155)) + 
+    gg.facet_wrap('label', ncol = 2) + 
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+gg.ggsave(pert_event, filename = 'figs/ee-perturbation.pdf')
+```
+
+```{r event-examples, fig.show = 'hold', out.width = '45%', fig.cap = '(ref:event-examples)', fig.subcap = paste0('(ref:event-examples-',c('a','b','c','d'),')'), fig.sep = c("\\hfill", "\\newline", "\\hfill", ""), fig.align = 'center', results = 'markup'}
+knitr::include_graphics(paste0('figs/', c('ee-live.png', 'ee-bouts.pdf', 'ee-strategy.pdf', 'ee-perturbation.pdf')))
+```
+
+(ref:event-examples) The basic paradigm of the experiment using GTMK44.4f as an example.
+
+(ref:event-examples-a) The setup under the microscope. The mouse was fixed using a headbar (left). The microscope can be seen on the right and the lick bouts can be seen in the bottom. They are symmetrically positioned in front of the snout, though the camera angle does not make this apparent. In some cases, the position of the lick bouts was adjusted to compensate a bias in lick direction.
+
+(ref:event-examples-b) As GTMK44.4f has the RL-contingency, right licks lead to an increase in frequency (and therefore sound ID) whereas left licks lead to a decrease. Points at which this sensorimotor contingency is purposefully violated are marked in pink. This particular event is given by left and right lick bouts. These are defined by a lick into the corresponding direction without such a lick in the preceding 500 ms.
+
+(ref:event-examples-c) Example for a possible strategy event. This term refers to a changing sound that does not lie within the rewarded region. The event is grouped according to the strategy ('Lick Left!' or 'Lick Right!') the sound indicates. Some of them are due to a perturbation (left column), some of them are due to the normal contingency.
+
+(ref:event-examples-d) Example of the possible strategy perturbations. This term refers to a sensorimotor perturbation that does not begin within the rewarded region. It compares the outcome according to the sensorimotor contingency with the outcome that actually occurred. In some cases, the strategy remains the same, in others, it switches.
+
+### Behavioral Analysis
+
+These events were analysed behaviorally by comparing the lick pattern before and after their onset. On the one hand, this was studied in an explorative manner by studying the development of the lick histogram over time. On the other hand, a more rigorous approach was necessary to quantify the effect of these events.
+
+For this purpose the lickrate before and after onset was determined. For this lickrate, the lick events were weighted differently according to the distance from event onset (see figure \@ref(fig:analysis)). If $t$ was the time of a particular event, its weight was given by the exponential kernel
+
+\begin{equation*}
+\exp(-\alpha |t|), \alpha = 2.
+\end{equation*}
+
+By adding up all these events, the nonlinear lickrate was determined for left and right licks and before and after event onset. For example, denoting the left future lickrate by $r_{l,f}$ and the other lickrates by the corresponding notation, for the event in the top right panel of figure \@ref(fig:analysis),
+
+\begin{equation*}
+r_{l,p}=0.62,\quad r_{r,p} = 0.11, \quad r_{l,f}=0.96,\quad r_{r,f} =0.96.
+\end{equation*}
+
+By subtracting left lickrates from right lickrates the lickrate difference
+
+\begin{equation*}
+rd_{p}=r_{r,p}-r_{l,p},\quad rd_{f}=r_{r,f}-r_{l,f},
+\end{equation*}
+
+was determined. The higher this value is, there more predominant are right licks, the lower it is, the more predominant are right licks. In the example, the past lickrate difference difference was -0.51 (which implies more left licks than right licks) and the future lickrate difference was 0 (which implies and equal amount of left and right licks). Finally the *change in lickrate difference* (CLD) was determined by subtracting the past lickrate difference from the future lickrate difference. A high CLD implies that the event led to more right licks, a low CLD implies that the event led to more left licks. Accordingly, this particular instance of a right lick bout has a CLD of 0.51.
+
+```{python analysis-prep}
+sel = tw.BusySelection(2, 40, 4325)
+ex_lick_bouts = tw.CenteredData(
+    tw.LickBout(windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'], days = ['2019-07-01'], blocks = ['C'],
+    sounds = True, center_columns = ['licks', 'rewards']
+)
+get_selection = sel.select(ex_lick_bouts.centered)
+get_selection = ex_lick_bouts.label_df(get_selection)
+lickrate_computation = (
+    gg.ggplot(get_selection, gg.aes(x = 'time', y = -0.05, fill = 'action')) + 
+    gg.stat_function(
+        fun = tw.ExpKernel().function, 
+        data = pd.DataFrame({
+            'time': np.array([-5, 0]),
+            'action': np.array(['Past', 'Past'])
+        }),
+        geom = 'area',
+        alpha = .5,
+        xlim = (-5, 0)
+    ) + 
+    gg.stat_function(
+        fun = tw.ExpKernel().function, 
+        data = pd.DataFrame({
+            'time': np.array([0, 5]),
+            'action': np.array(['Future', 'Future'])
+        }),
+        geom = 'area',
+        alpha = .5,
+        xlim = (0, 5)
+    ) +
+    gg.geom_tile(gg.aes(width = 0.1, height = 0.04)) + 
+    gg.facet_grid(['event_nr', 'label'], 
+                  labeller = gg.labeller(rows = lambda x: '')) + 
+    gg.scale_fill_manual(values = ex_lick_bouts.colors) + 
+    gg.labs(x = 'Time', y = 'Weight') + 
+    gg.theme(legend_position = 'top', 
+             legend_title = gg.element_blank(),
+             subplots_adjust = {'top': 0.85})
+)
+gg.ggsave(lickrate_computation, filename = 'figs/a-lickrate.pdf')
+```
+
+```{r analysis, fig.show = 'hold', out.width = '60%', fig.cap = '(ref:analysis-examples)', fig.align = 'center', results = 'markup'}
+knitr::include_graphics('figs/a-lickrate.pdf')
+```
+
+(ref:analysis-examples) Explanation of the lickrate computation using the events from figure ##b. When the lickrate as a metric is being computed, the sounds are weighted according to the distance from the event onset using the kernel displayed in this figure. This lickrate is being computed for left and right licks (displayed on the bottom of the plot), as well as for a future and a past scope. The kernel allows this nonlinear lickrate to take events into account that occur at a later time without neglecting the importance of immediately adjacent events. The Lickrate Difference is computed by subtracting the left lickrate from the right lickrate and provides a summary the licking behavior before and after the onset of a certain event. Right licks were or will be predominant if this difference is positive, left licks were or will be predominant if this difference is negative. Finally, the Change in Lickrate Difference is computed by subtrating the future Lickrate Difference from the past Lickrate Difference. This metric indicates the effect of an event onset. The event leads to an increase in right licks if the CLD is positive and to an increase in left licks if it is negative.
+
+In order to account for behavioral variation between different blocks, this CLD was furthermore normalized in such a way that a value of 1 corresponded to an average right lick bout and a value of -1 corresponded to an average left lick bout. A bootstrap estimation [@efron1979bootstrap] of the confidence interval of this normalized CLD allowed for a determination whether the event onset, and in particular the strategy and strategy perturbation events, had had a significant behavioral effect.

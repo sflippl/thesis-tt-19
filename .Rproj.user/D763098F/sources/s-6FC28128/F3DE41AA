@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1565768636491.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "F3DE41AA",
+    "lastKnownWriteTime" : 1565774212,
+    "last_content_update" : 1565774213004,
+    "path" : "~/Documents/thesis-tt-19/thesis-tt-19/04-discussion.Rmd",
+    "project_path" : "04-discussion.Rmd",
+    "properties" : {
+        "cursorPosition" : "4,44",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

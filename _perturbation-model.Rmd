@@ -1,0 +1,72 @@
+---
+title: "Perturbation Model"
+author: "Samuel Lippl"
+date: "10/08/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(pls)
+```
+
+## Do perturbations have an effect on spike response?
+
+```{r}
+df_change <- feather::read_feather('data/df_change.feather')
+df_change[['perturbation']] <- base::sample(df_change[['perturbation']])
+```
+
+
+We wish to model spikerate well by a linear model, so look how we can relinearize the tuning curve.
+
+```{r}
+df_change <- df_change %>% 
+    mutate(exp_norm = exp(-abs(norm_id)),
+           ber = rbernoulli(nrow(df_change)), 
+           exp_norm_larger = case_when(
+               norm_id < 0 ~ exp_norm,
+               norm_id == 0 ~ as.double(ber),
+               norm_id > 0 ~ 0
+           ),
+           exp_norm_smaller = case_when(
+               norm_id > 0 ~ exp_norm,
+               norm_id == 0 ~ as.double(!ber),
+               norm_id < 0 ~ 0
+           ))
+df_change %>% 
+    gather(key = 'transformation', value = 'value', exp_norm, exp_norm_larger, exp_norm_smaller) %>%
+    ggplot(aes(x = norm_id, color = transformation, y = value)) + 
+    geom_line() + 
+    ggsave('figs/transformations.png')
+```
+
+```{r}
+df_tuning <- df_change %>% 
+    select(neuron_id, spikerate, exp_norm_larger, exp_norm_smaller)
+pls_tuning <- plsr(spikerate ~ exp_norm_larger + exp_norm_smaller, data = df_tuning, validation = "CV", center = FALSE)
+summary(pls_tuning)
+pcr_tuning <- pcr(spikerate ~ exp_norm_larger + exp_norm_smaller, data = df_tuning, validation = "CV", center = FALSE)
+summary(pcr_tuning)
+loadings(pls_tuning)
+```
+
+```{r}
+df_perts <- df_change %>% 
+    mutate(exp_pert = scale(exp(-abs(perturbation)), center = FALSE), 
+           exp_change = scale(exp(-abs(change)), center = FALSE),
+           exp_expected = scale(exp(-abs(norm_id+perturbation)), center = FALSE), 
+           exp_previous = scale(exp(-abs(norm_id - change)), center = FALSE), 
+           exp_norm = scale(exp_norm, center = FALSE),
+           spikerate = scale(spikerate))
+control <- plsr(spikerate ~ exp_norm, data = df_perts, validation = "CV", segments = 50, center = FALSE)
+summary(control)
+pls_perts <- plsr(spikerate ~ exp_norm + exp_pert + exp_change + exp_expected + exp_previous, data = df_perts, validation = "CV", segments = 50, center = TRUE)
+summary(pls_perts)
+loadings(pls_perts)
+pcr_perts <- pcr(spikerate ~ exp_norm + exp_pert + exp_change + exp_expected + exp_previous, data = df_perts, validation = "CV", segments = 50, center = TRUE)
+summary(pcr_perts)
+loadings(pcr_perts)
+```
+

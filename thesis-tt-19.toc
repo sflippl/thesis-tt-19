@@ -1,0 +1,34 @@
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}
+\contentsline {section}{\numberline {2}Methods}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Animals}{2}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}Strain}{2}{subsubsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}Surgeries}{3}{subsubsection.2.1.2}
+\contentsline {subsubsection}{\numberline {2.1.3}Preparations for behavioural training}{3}{subsubsection.2.1.3}
+\contentsline {subsection}{\numberline {2.2}Materials}{3}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}Behavioural setup}{3}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}Two-photon imaging setup}{4}{subsubsection.2.2.2}
+\contentsline {subsubsection}{\numberline {2.2.3}Widefield imaging setup}{4}{subsubsection.2.2.3}
+\contentsline {subsubsection}{\numberline {2.2.4}Imaging procedures}{5}{subsubsection.2.2.4}
+\contentsline {subsection}{\numberline {2.3}Behavioural paradigm}{5}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Sensorimotor task}{5}{subsubsection.2.3.1}
+\contentsline {subsubsection}{\numberline {2.3.2}Violations of the Contingency}{6}{subsubsection.2.3.2}
+\contentsline {subsubsection}{\numberline {2.3.3}Sound level modulations}{7}{subsubsection.2.3.3}
+\contentsline {subsubsection}{\numberline {2.3.4}Training Methods}{7}{subsubsection.2.3.4}
+\contentsline {subsubsection}{\numberline {2.3.5}Imaging procedures}{7}{subsubsection.2.3.5}
+\contentsline {subsection}{\numberline {2.4}Reproducibility}{8}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}Behavioural analysis}{8}{subsection.2.5}
+\contentsline {subsection}{\numberline {2.6}Neural Analysis}{9}{subsection.2.6}
+\contentsline {section}{\numberline {3}Results}{10}{section.3}
+\contentsline {subsection}{\numberline {3.1}Acquisition}{10}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}Distinguishing a sound-driven policy from a motor-driven policy}{11}{subsubsection.3.1.1}
+\contentsline {subsubsection}{\numberline {3.1.2}Lickrates after a strategy change}{12}{subsubsection.3.1.2}
+\contentsline {subsubsection}{\numberline {3.1.3}Group analysis of behavioural learning}{16}{subsubsection.3.1.3}
+\contentsline {subsubsection}{\numberline {3.1.4}Course of learning}{16}{subsubsection.3.1.4}
+\contentsline {subsection}{\numberline {3.2}Representation}{18}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Frequency tuned neurons in auditory cortex}{19}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Sensorimotor Perturbations}{19}{subsubsection.3.2.2}
+\contentsline {section}{\numberline {4}Discussion}{21}{section.4}
+\contentsline {subsection}{\numberline {4.1}Behavioural evidence for task acquisition}{23}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Auditory cortex represents the artificial sensorimotor contingency}{24}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Implications of the behavioural and neural analysis}{24}{subsection.4.3}
+\contentsline {section}{\numberline {A}Licking behavior of all mice}{30}{appendix.A}

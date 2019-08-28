@@ -1,0 +1,108 @@
+# Methods
+
+## Animals
+
+### Strain
+
+All experiments were approved by the local ethical review committee at the University of Oxford and licensed by the UK home office. Eleven mice (three male (M01-03) and eight female (M04-11)) were used for the behavioural experiments. They came from a line obtained by crossing the floxed-Ai95 (RCL-GCaMP6f)-D line (Jackson Laboratories; stock number 024105) with the CaMKIIalpha-Cre T29-1 line (Jackson Laboratories; stock number: 005359). As a result, the mice expressed the fluorescent calcium indicator GCaMP6f [@chen2013gcamp] in cortical excitatory neurons.
+
+### Surgeries
+
+At five to ten weeks of age, each animal was implanted with a metal head post and a cranial glass window over right auditory cortex, using surgical procedures described previously [@weissenberger2019licks]. Briefly, after inducing general anaesthesia through the inhalation of isoflurane, the animal was placed in a stereotactic frame (Model 900LS, David Kopf Instruments). Body temperature and anaesthetic depth were monitored and kept constant throughout the surgery. The eyes were lubricated with eye ointment. Under aseptic conditions, the hair over the skull was removed. Following an incision into the scalp and the removal of the surrounding tissue, a 4mm circular craniotomy was drilled over right auditory cortex and a custom-made cylindrical window was placed onto the brain and glued to the surrounding skull. Post-operatively, the animals were given analgesia, kept warm, and monitored for at least 48 hours. All mice were allowed to recover for at least one week after surgery.
+
+### Preparations for behavioural training
+
+After recovery, the mice were restricted to 1 ml of water per day in preparation of the behavioural training. Throughout the water restriction, the animal’s weights were measured relative to their initial weight on a daily basis. Weight loss was kept constant around 85% and not allowed to fall under 80%. Behavioural training began after the weight had stabilized.
+
+## Materials
+
+### Behavioural setup
+
+Mice M01-M07 were pre-trained in behavioural boxes before being imaged under the microscope, whereas mice M08-M11 were trained under the microscope setup from the beginning. For these purposes, several two-spout lick detection circuits were built following the diagram by @slotnick2009lick. The mice were positioned in a conductive tube that was connected to this circuit. When they licked the spouts, which were also connected, they closed this circuit, which was registered.
+
+In the behavioural boxes, the task was controlled using a custom-written program in Python 2 [@python] using the packages ‘numpy’ [@oliphant2006numpy; @vanderwalt2011numpy], 'random', 'time', 'multiprocessing', 'RPi.GPIO', 'csv', 'requests', 'pygame', and 'sys'. This program was executed on a Raspberry Pi 2 that was connected to the lick detection circuits and a solenoid responsible for delivering rewards in the form of 0.005ml drops of water.
+
+In the microscope setup, the task was controlled using a custom-written program in Matlab 2017b (&copy; Mathworks), which was connected to the task setup by a 10 MHz data acquisition board (National Instruments). This allowed for synchronization of the behavioural data with the microscope frame clock. Sound presentation was mediated using Psychtoolbox V3 [@brainard1997psychtoolbox; @pelli1997psychtoolbox; @kleiner2007psychtoolbox]. The levels of the presented sound were calibrated with a free-field high-frequency microphone (GRAS), and the latency of the sound presentation was determined and corrected for in the analysis.
+
+Each animal performed the behavioural task once a day using between one and six blocks of training. Overall, this yielded 97 blocks of behavioural data from the box setup and 618 blocks of behavioural data from the microscope setup. Of these 618 blocks, imaging data was acquired on 233 blocks.
+
+### Two-photon imaging setup
+
+Calcium imaging of auditory cortex was performed as described in @weissenberger2019licks, using a rotating two-photon laser-scanning microscope (Bergamo II, Thorlabs) with a 20x/1.00 immersion objective (Olympus). Excitation light (940 nm) was emitted from a femtosecond laser (Chameleon Discovery, Coherent) at 1250 mW, attenuated with a neutral density filter wheel (Thorlabs), and amplitude-modulated with a Pockels cell (302RM, Conoptics). This beam was then optically expanded and guided through a periscope into the scanhead where it was scanned onto the brain with an 8kHz resonant scanner and a galvanometric scan mirror, enabling the acquisition of 512x512 pixel frames at rates of 29.7 Hz. The microscope was controlled using ScanImage 2017 (Vidrio Technologies).
+
+### Widefield imaging setup
+
+Widefield calcium imaging allowed for the identification of putative functional areas of auditory cortex. Before starting behavioural training, animals were head-fixed and passively exposed to a repeating sequence of eight different sinusoidally amplitude modulated (SAM) tones (4, 5, 25 & 32 kHz; 55 & 65 dB SPL; 500 ms duration; 10 Hz modulation frequency; 100% modulation depth; 15 repeats) . Images were acquired at 10 Hz through a TL2x-SAP objective (Thorlabs) and a 340M-GE camera (Thorlabs) using a blue LED for widefield excitation. Evoked responses to SAM tones were averaged (1-10 frames post-onset) and baseline corrected (1-6 frames pre-onset), and resulting response amplitude maps were plotted for each frequency-level combination. Based on the quality of the response maps, one pair of average low- and high-frequency SAM-responses was chosen for computing the widefield map. Two-photon images were registered to the widefield map by visually aligning the blood vessel pattern to the mean widefield image.
+
+### Imaging procedures
+
+To record from neurons in the auditory cortex, the animals were head fixed in an optically and acoustically isolated imaging booth. During the subsequent imaging preparations, they performed the behavioural task. As a reference position, the microscope was positioned at the surface of the brain and the center of the widefield image. This allowed us to move the microscope to the functional areas of auditory cortex that had been identified using widefield calcium imaging and to find the same areas again across different days. Imaging was performed at planes of 170-250 µm below the surface, corresponding to cortical layers 2/3.
+
+Subsequently, suitable areas for imaging were identified using the functional areas identified by the widefield image, the visibility of the neurons in these areas, and the robustness of their auditory responses. Several areas were recorded on different days to sample from different areas within auditory cortex. After selecting three to four locations in such a manner, these areas were repeatedly imaged throughout the remaining days as long as visibility allowed it. The same imaging location was determined using the reference frame and the brain surface, as well as a mean image of the recorded area to align the microscope between several days.
+
+Imaging blocks of 10 minutes were acquired consecutively as long as the animal behaved sensibly, but never for longer than an hour. In this manner, imaging data were collected for 233 blocks, in total.
+
+## Behavioural paradigm
+
+### Sensorimotor task
+
+The mice were head fixed in front of two spouts that were positioned either side of their snout. Sometimes the spouts were shifted to one side to counteract a bias into one direction. The mice were presented every 500 ms with pure tones that were 200 ms long and between 60 and 65 dB. These tones were centered around 11.3kHz and arranged in six steps per octave. When they were presented with stimuli spanning one octave, these were logarithmically arranged in the space between 8 and 16 kHz. A three octaves space spanned the range from 4 to 32 kHz. By licking the two spouts in front of them, the mice manipulated the frequency that was presented next. For this purpose, the counts nr and nl of right and left licks respectively were determined in either a window of 700 to 200ms or a window of 600 to 100ms before the next stimulus presentation. The current stimulus frequency was subsequently shifted by steps that were determined by rounding the formula
+
+$$2\left(\log(n_r+1)-\log(n_l+1)\right)$$
+
+to the nearest whole number. These shifts were bounded by the number of octaves in a given trial. Mice were presented either with an RL-contingency such that right licks led to a decreasing stimulus frequency and left licks led to an increasing frequency, or an LR-contingency, in which left and right licks led to decreasing and increasing frequencies, respectively.
+
+When the tone frequency was at most one step away from the middle frequency (i. e. between 10 and 12kHz), mice were presented with a small drop of water (0.005ml) in the spout they had last licked. In order to reach this rewarded region, the stimuli outside of this rewarded region therefore implied the strategy that needed to be employed in order to reach the rewarded region. In the RL-contingency (resp. LR-contingency), frequencies above (resp. below) the rewarded region implied a ‘Rightwards!’ strategy, where the animal needed to lick right, and frequencies below (resp. above) the rewarded region implied a ‘Leftwards!’ strategy, where the animal need to lick the left spout (see figure \@ref(fig:a-example-py) for an example of an RL-contingency).
+
+Recorded licks and rewards as well as presented sounds were registered in a text file for offline analysis.
+
+### Violations of the Contingency
+
+For the purpose of understanding whether the mice had learned the sensorimotor contingency, and whether auditory cortex represented this contingency, targeted violations of the contingency were introduced to decouple sensorimotor dynamics from its confounding factors. When the lick rate was non-zero, random jumps in tone frequency were occasionally being presented, violating the sensorimotor contingency.
+
+Larger jumps led to perturbations in strategy. Without such perturbations, a sound-driven policy would lead to a motor pattern of alternating left and right lick bouts. Such a policy would be indistinguishable from a policy based on a regular motor pattern switching between left and right lick bouts. After a strategy perturbation, an animal implementing a motor-driven policy should employ the same lick pattern as if the perturbation had not occurred, whereas an animal implementing a sound-driven policy should adapt its behaviour accordingly. By comparing the licking behaviour after such an event with the regular licking behaviour, a sound-driven policy could therefore be distinguished from a motor-driven policy. For this purpose, jumps were generate from a uniform distribution including all possible changes.
+
+These large jumps were apparent as sensory oddballs. In the case of smaller jumps, the tones could be matched with tones following the regular contingency for their frequency and sound history (going back one stimulus). If the recorded neurons reacted differently to those tones violating the sensorimotor contingency, this would therefore indicate that these neurons represented the sensorimotor contingency. For this purpose, jumps were randomly generated from the prior distribution of stimulus changes.
+
+### Sound level modulations
+
+Cortex has been demonstrated in multiple areas to integrate multimodal information according to their respective precision [@kording2004bayesian]. In order to probe the integration of sensory and motor evidence sound levels were decreased by 20 dB in some sessions to manipulate their precision. In these sessions, every stimulus had an equal probability of being represented at a sound level of 40-45 dB or 60-65 dB.
+
+### Training Methods
+
+In the beginning, the mice were rewarded for licking the spouts to guide their behaviour into the correct direction. Subsequently, they were presented with a simple version of the behavioural paradigm, where the sounds were presented within one octave and without perturbations. As the animals’ behaviour stabilized this window was extended to two and finally three octaves and strategy perturbations were introduced. To guide their behaviour in the initial stages, rewards were presented outside of the rewarded frequencies if either of the following conditions was satisfied: 1) the animal licked after having not licked for two minutes; 2) the animal licked in the direction that moved it closer to the rewarded frequency region after having not received a reward for ninety seconds. These rewards were omitted from the analysis.
+
+### Imaging procedures
+
+To record from neurons in the auditory cortex, the animals were head fixed in an optically and acoustically isolated imaging booth. During the subsequent imaging preparations, they performed the behavioural task. As a reference position, the microscope was positioned at the surface of the brain and the center of the widefield image. This allowed us to move the microscope to the functional areas of auditory cortex that had been identified using widefield calcium imaging and to find the same areas again across different days. Imaging was performed at planes of 170-250 µm below the surface, corresponding to cortical layers 2/3.
+
+Subsequently, suitable areas for imaging were identified using the functional areas identified by the widefield image, the visibility of the neurons in these areas, and the robustness of their auditory responses. Several areas were recorded on different days to sample from different areas within auditory cortex. After selecting three to four locations in such a manner, these areas were repeatedly imaged throughout the remaining days as long as visibility allowed it. The same imaging location was determined using the reference frame and the brain surface, as well as a mean image of the recorded area to align the microscope between several days.
+
+Imaging blocks of 10 minutes were acquired consecutively as long as the animal behaved sensibly, but never for longer than an hour. In this manner, imaging data were collected for 233 blocks, in total.
+
+## Reproducibility
+
+The collected behavioural and neural data is available in the Python package ‘toneworld’, which was created for the purpose of this dissertation and also contains the behavioural and neural analysis pipeline. A small showcase of its functionality can be found in the appendix. The package relied on the packages ‘copy’, ‘numpy’, ‘pandas’ [@pandas], ‘setuptools’, ‘tqdm’, ‘math’, ‘scipy’ [@scipy], ‘bootstrapped’, and ‘plotnine’. Parts of the analysis specific to this dissertation were conducted in R [@R-base] using the packages ‘broom’ [@R-broom], ‘dplyr’ [@R-dplyr], ‘feather’ [@R-feather], ‘ggplot2’ [@R-ggplot2], ‘grid’, ‘lubridate’ [@R-lubridate], ‘magrittr’ [@R-magrittr], ‘muStat’ [@R-muStat], ‘png’ [@R-png], ‘reticulate’ [@R-reticulate], ‘stringr’ [@R-stringr], and ‘tidyr’ [@R-tidyr]. The dissertation itself was written in R using ‘bookdown’ [@R-bookdown], ‘knitr’ [@R-knitr], and ‘rmarkdown’ [@R-rmarkdown]. The package and the code necessary to reproduce the dissertation is available upon request.
+
+## Behavioural analysis
+
+In order to analyze the mice’s behaviour, the lickrates before and after certain sound events were determined. For this purpose, only changing sounds were included to omit behaviorally inactive phases. When a sound changed from a frequency region that suggested one particular strategy to a region that suggested another strategy, this warranted a change in licking behaviour according to a sound-driven policy. Using bins of 250 ms, the average lickrates in a five second window before and after such a strategy event were therefore assessed. 
+
+Subsequently, the effect of strategy perturbations was analysed by comparing violations of the paradigm that led to perturbations to those that did not. Mann-Whitney U tests [@hodges1956nonparametric] were used to assess the nully hypothesis that the lick rate either did not change or changed into the wrong direction.
+
+This analysis was summed up by determining the change in lickrate difference induced by the sound events. For this purpose, the difference between the right and left lick rate in the second before and after stimulus onset was determined. The lickrate difference before stimulus onset was then subtracted from the lick rate difference after onset. A positive (resp. negative) change in lick rate difference thus implied that the corresponding sound event led to a higher proportion of right (resp. left) licks.
+
+The Prentice-Wittkowski test [@prentice1979test; @wittkowski2007test] is a generalization of the Wilcoxon rank-sum test that allows for between-group comparisons within blocks of unequal length. This test was used to assess the null hypothesis that in a random stimulus event, the change in lickrate difference was not positive where it should be positive and not negative where it should be negative. Events were blocked according to the day, and the previous strategy. The p-value was then determined for each mouse individually.
+
+The course of behavioural learning in mouse M10 was first assessed by comparing the reactions to strategy perturbations on days one to seven to the reactions on days fourteen to twenty using the framework involving the Mann-Whitney U test and the Prentice-Wittkowski test described above.
+
+Behavioural analysis was restricted to the sessions under the imaging setup. Due to a damaged headbar, mouse M05 could not continue its behavioural training in this environment. Behavioural data of mouse M02 suggested that the data collection had been corrupted. Both animals were therefore excluded from analysis. Including the corrupted data from M02 did not change the results of the Prentice-Wittkowski test across all animals.
+
+
+## Neural Analysis
+
+The Suite2p package [@pachitariu2017suite2p] was used to preprocess the neural data, extract fluorescence traces and infer spike rates. Preprocessing involved registration of the image frames to a 100-frame mean image using efficient subpixel registration methods [@guizar2008subpixel], SVD decomposition and region of interest (ROI) detection. A classifier was used to select neurons from the candidate ROIs. The default classifier for this purpose was fine tuned by manual assessment for the first few sessions, considerably improving its performance. Finally, the spike-rates of these neurons were determined using the OASIS algorithm implemented in suite2p. This included classifying which of these regions of interest corresponded to actual neurons. The classifier for this purpose was fine tuned by manual assessment for the first few sessions and improved its performance based on these data. Finally, the spike-rates of these neurons were determined using the deconvolution algorithm included in ‘suite2p’.
+
+The auditory response of these neurons was determined by determining their spike-rate for the different tone frequencies in the 300 ms after stimulus onset. Since the stimulus lasted for 200 ms, this spike-rate included both onset and offset responses. Due to sensory adaptation, neurons generally react more strongly to changing stimuli [@westerman1984rapid]. For this reason, only changing tones were included in this analysis. Using a Kruskal-Wallis-test, a nonparametric analysis of variance [@kruskal1952], neurons were identified whose responses significantly differed across the presented frequencies ($p<0.0001$). Only these neurons were included in the subsequent analysis. The best frequency was determined as the frequency that, on average, elicited the highest spike-rate.
+
+As a next step, a Prentice-Wittkowski test was used to determine whether compared to regular sounds, the neural response significantly differed for events that violated the sensorimotor contingency, but were matched in the manner described above. This was first assessed on a population response, resulting in a single p-value. As a next step, this test was applied to every single neuron, resulting in a distribution of p-values. By shuffling the perturbations across events, the distribution of these p-values was determined under the null hypothesis that pure sensorimotor perturbations did not elicit different spike-rates in any neuron and compared to the true distribution of p-values.

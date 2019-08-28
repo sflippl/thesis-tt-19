@@ -1,0 +1,67 @@
+--- 
+author: "Samuel Lippl"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: article
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+csl: the-journal-of-neuroscience.csl
+link-citations: yes
+subparagraph: yes
+description: "This dissertation has been submitted in Trinity Term 2019 as part of the MSc Neuroscience."
+geometry: "left=3cm,right=3cm,top=2cm,bottom=2cm"
+---
+
+```{r include=FALSE, message=FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center",
+  out.width = "90%",
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  results = 'hide')
+library(reticulate)
+library(feather)
+library(broom)
+library(ggplot2)
+library(patchwork)
+library(muStat)
+library(magrittr)
+library(dplyr)
+library(stringr)
+library(lubridate)
+library(tidyr)
+library(png)
+library(grid)
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+```{python}
+import toneworld as tw
+import plotnine as gg
+import pandas as pd
+import numpy as np
+import copy
+import scipy as sp
+import scipy.stats as stats
+import bootstrapped.stats_functions as bs_stats
+import bootstrapped.bootstrap as bs
+import bootstrapped.compare_functions as bs_compare
+```
+
+
+`r if(knitr::is_html_output()) '# Abstract {-}'`
+
+`r if(knitr::is_latex_output()) '
+\\doublespacing
+\\begin{abstract}'`
+
+Relating motor output to its sensory consequences is critical to navigating complex environments. In order to investigate the emergence of artificial sensorimotor contingencies, we trained mice on a novel sensorimotor task that required them to navigate through a virtual tonespace while recording from large numbers of neurons in auditory cortex using 2-photon imaging. Five out of nine mice learned the sensorimotor contingency and in an example session of one of those mice, a small proportion of neurons was sensitive to violations of the contingency. The task and its variations connect a simple behavioural paradigm in head fixed mice to some of the most debated computational theories of learning, producing neural and behavioural data that can be used to test their predictions. 
+
+
+`r if(knitr::is_latex_output()) '\\end{abstract}'`
+
+`r if (knitr::is_latex_output()) '\\tableofcontents'`

@@ -1,0 +1,31 @@
+"0","ex_strategy = tw.CenteredData(
+    tw.SoundEvents(groups = ['strategy'], filters = ['nosuccess', 'change'],
+                   windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'], days = ['2019-07-01'], blocks = ['C'],
+    sounds = True, center_columns = ['licks', 'rewards']
+)
+strat_event = (
+    strat.event_illustration(selection = tw.BusySelection(2,20,234)) +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+strat_raster = (
+    strat.rastermap(selection = tw.BusySelection(20, 40, 4325)) +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+strat_hist = (
+    strat.vis_histogram() +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+ex_strat_f = tw.CenteredData(
+    tw.SoundEvents(groups = ['strategy'], filters = ['nosuccess', 'change'],
+                   windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f']
+)
+strat_hist_f = (
+    ex_strat_f.vis_histogram() +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+gg.ggsave(strat_event, filename = 'figs/strat_event.pdf')
+gg.ggsave(strat_raster, filename = 'figs/strat_raster.pdf')
+gg.ggsave(strat_hist, filename = 'figs/strat_hist.pdf')
+gg.ggsave(strat_hist_f, filename = 'figs/strat_hist_f.pdf')"

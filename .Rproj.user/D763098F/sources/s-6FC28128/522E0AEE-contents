@@ -1,0 +1,278 @@
+# Licking behavior of all mice
+
+```{python eval = FALSE}
+cd_pert = tw.CenteredData(
+    tw.SoundEvents(groups = ['strategy', 'strategy_perturbation', 'true_strategy'],
+                   filters = ['nosuccess', 'change', 'perturbation'],
+                   windows = tw.JanusWindows(past = -5, future = 5))
+)
+cd_pert.centered.reset_index().to_feather('general_hist.feather')
+```
+
+```{r, fig.cap = 'Reaction of M01 and M03 to strategy perturbations'}
+rm(list = ls())
+cd_pert <- feather::read_feather('general_hist.feather') %>% 
+    filter(true_strategy != 'success') %>% 
+    mutate(time = round(time*4)/4+1/8) %>% 
+    group_by(label, direction, time, strategy_perturbation, true_strategy, event_nr) %>%
+    summarize(rate = n()*4)
+expand <- 
+    expand.grid(event_nr = unique(cd_pert$event_nr),
+                direction = unique(cd_pert$direction),
+                time = unique(cd_pert$time)) %>% 
+    as_tibble() %>% 
+    left_join(
+        cd_pert %>% ungroup() %>%  select(event_nr, strategy_perturbation, true_strategy) %>% unique(),
+        by = c('event_nr')
+    )
+cd_pert <-
+    cd_pert %>% 
+    ungroup() %>% 
+    full_join(expand, by = c('event_nr', 'direction', 'time', 'strategy_perturbation', 'true_strategy')) %>% 
+    mutate(rate = if_else(is.na(rate), 0, rate),
+           colour_event = if_else(direction == 'L', 'Left Lick', 'Right Lick'),
+           perturbation = if_else(strategy_perturbation == 'Yes', 'Perturbation', 'No perturbation'),
+           previous = if_else(true_strategy == 'left', "'Leftwards!'", "'Rightwards!'"),
+           mouse = str_split_fixed(event_nr, "_", 2)[,1])
+hist_batch_1 <- cd_pert %>% 
+    filter(mouse %in% c("gtmk443a", "gtmk443c")) %>% 
+    mutate(mouse = case_when(
+        mouse == 'gtmk443a' ~ 'M01',
+        mouse == 'gtmk443c' ~ 'M03'
+    )) %>% 
+    #group_by(colour_event, perturbation, time, previous, mouse) %>% 
+    #summarise(rate = mean(rate)) %>% 
+    ggplot(aes(x = time, y = rate,
+                                   colour = colour_event,
+                                   linetype = perturbation)) + 
+    geom_vline(xintercept = 0, colour = 'grey50') +
+    stat_summary(geom = 'line', fun.y = 'mean') + 
+    facet_grid(mouse ~ previous) +
+    xlim(-4.95, 4.95) +
+    labs(x = 'Time (s)', y = 'Lickrate (Hz)') + 
+    scale_colour_manual(values = c(`Left Lick` = '#1b9e77', 
+                                     `Right Lick` = '#d95f02')) + 
+    theme_minimal() + 
+    theme(legend.title = element_blank())
+hist_batch_1
+```
+
+```{r fig.cap = '(ref:significance-1)', eval = FALSE}
+df_metric <- cd_pert %>% 
+    filter(time > -1 & time < 1) %>% 
+    mutate(scope = if_else(time < 0, 'past','future')) %>% 
+    mutate(long_direction = if_else(direction == 'L', 'left', 'right'), 
+           correct = case_when(
+                true_strategy == long_direction & 
+                    strategy_perturbation == 'No' ~ 'Yes',
+                true_strategy == long_direction & 
+                    strategy_perturbation == 'Yes' ~ 'No',
+                true_strategy != long_direction & 
+                    strategy_perturbation == 'Yes' ~ 'Yes',
+                true_strategy != long_direction & 
+                    strategy_perturbation == 'No' ~ 'No'
+            )) %>% 
+    group_by(scope, true_strategy, direction, correct, event_nr, strategy_perturbation, mouse) %>% 
+    summarise(rate = mean(rate))
+df_ab <- 
+    df_metric %>% 
+    group_by(scope, true_strategy, direction, mouse) %>% 
+    summarise(pvalue = wilcox.test(x = rate[correct == 'Yes'],
+                                   y = rate[correct == 'No'], alternative = if_else(unique(scope) == 'past', 'two.sided', 'greater'))$p.value,
+              U = wilcox.test(x = rate[correct == 'Yes'],
+                                   y = rate[correct == 'No'], alternative = if_else(unique(scope) == 'past', 'two.sided', 'greater'))$statistic) %>% 
+    mutate(previous = if_else(true_strategy == 'left', "'Leftwards!'", "'Rightwards!'"))
+    
+df_metric <- 
+    df_metric %>% 
+    mutate(
+        xmin = 0.62 + 0.5*(direction == 'R') + (scope == 'future') + 0.25 * (strategy_perturbation == 'Yes'),
+        group = paste(direction, scope, true_strategy, strategy_perturbation),
+        perturbation = if_else(strategy_perturbation == 'Yes', 'Perturbation', 'No perturbation'),
+        colour_event = if_else(direction == 'L', 'Left Lick', 'Right Lick'),
+        previous = if_else(true_strategy == 'left', "'Leftwards!'", "'Rightwards!'")
+    )
+df_ab <- 
+    df_ab %>% 
+    filter(true_strategy != 'success') %>%
+    mutate(
+        annotation = case_when(
+            pvalue < 1e-4 ~ 'p<0.0001',
+            pvalue < 1e-3 ~ 'p<0.001',
+            pvalue < 1e-2 ~ 'p<0.01',
+            TRUE ~ paste0('p=', round(pvalue, 2))
+        ),
+        xmin = 0.62 + 0.5*(direction == 'R') + (scope == 'future') + 0.125,
+        group = paste(direction, scope, previous)
+    )
+df_met <- 
+    df_metric %>% 
+    filter(mouse %in% c("gtmk443a", "gtmk443b", "gtmk443c")) %>% 
+    mutate(mouse = case_when(
+        mouse == 'gtmk443a' ~ 'M01',
+        mouse == 'gtmk443b' ~ 'M02',
+        mouse == 'gtmk443c' ~ 'M03'
+    ))
+df_metric %>% 
+    filter(mouse %in% c("gtmk443a", "gtmk443b", "gtmk443c")) %>% 
+    mutate(mouse = case_when(
+        mouse == 'gtmk443a' ~ 'M01',
+        mouse == 'gtmk443b' ~ 'M02',
+        mouse == 'gtmk443c' ~ 'M03'
+    )) %>% 
+    ggplot(aes(x = forcats::fct_rev(scope), y = rate, color = colour_event,
+                             linetype = perturbation, shape = perturbation)) + 
+    facet_grid(mouse ~ previous) + 
+    stat_summary(geom = 'pointrange', fun.data = 'mean_cl_boot', position = position_dodge(width = 1)) + 
+    geom_vline(xintercept = 1.5, color = 'grey50') +
+    scale_x_discrete(breaks = NULL) + 
+    scale_shape_manual(values = c(`Perturbation` = 1, `No perturbation` = 19)) +
+    scale_colour_manual(values = c(`Left Lick` = '#1b9e77', 
+                                     `Right Lick` = '#d95f02')) + 
+    theme_minimal() + 
+    labs(x = NULL, y = 'Average Lickrate (Hz)') +
+    ylim(0, 1) +
+    theme(legend.title = element_blank(),
+          legend.position = 'top') + 
+    geom_segment(aes(x = xmin, xend = xmin, y = 0.6, yend = 0.7,
+                     color = NULL, linetype = NULL, shape = NULL, group = group),
+                 show.legend = FALSE) + 
+    geom_segment(aes(x = xmin, xend = xmin + 0.25, y = 0.7, yend = 0.7), 
+                 inherit.aes = FALSE,
+                 data = df_metric %>% 
+                     filter(strategy_perturbation == 'No') %>% 
+    filter(mouse %in% c("gtmk443a", "gtmk443b", "gtmk443c")) %>% 
+    mutate(mouse = case_when(
+        mouse == 'gtmk443a' ~ 'M01',
+        mouse == 'gtmk443b' ~ 'M02',
+        mouse == 'gtmk443c' ~ 'M03'
+    ))) + 
+    geom_text(aes(x = xmin, y = 0.75, label = annotation), inherit.aes = FALSE,
+              data = df_ab %>% 
+    filter(mouse %in% c("gtmk443a", "gtmk443b", "gtmk443c")) %>% 
+    mutate(mouse = case_when(
+        mouse == 'gtmk443a' ~ 'M01',
+        mouse == 'gtmk443b' ~ 'M02',
+        mouse == 'gtmk443c' ~ 'M03'
+    )),
+              vjust = 'bottom', hjust = 'middle')
+```
+(ref:significance-1) Average lickrates in the second before and after the stimulus onset in all sessions of mice M01-03. For a more detailed description, see figure \@ref(fig:a-significance). The differences in lickrates before perturbations can be explained by the fact that early perturbations were small and contingent on behavioural activity.
+
+```{r, fig.cap = 'Reaction of M04, M06, and M07 to strategy perturbations'}
+cd_pert %>% 
+    filter(mouse %in% c("gtmk443e", "gtmk443g", "gtmk443h")) %>% 
+    mutate(mouse = case_when(
+        mouse == 'gtmk443e' ~ 'M04',
+        mouse == 'gtmk443g' ~ 'M06',
+        mouse == 'gtmk443h' ~ 'M07'
+    )) %>% 
+    #group_by(colour_event, perturbation, time, previous, mouse) %>% 
+    #summarise(rate = mean(rate)) %>% 
+    ggplot(aes(x = time, y = rate,
+                                   colour = colour_event,
+                                   linetype = perturbation)) + 
+    geom_vline(xintercept = 0, colour = 'grey50') +
+    stat_summary(geom = 'line', fun.y = 'mean') + 
+    facet_grid(mouse ~ previous) +
+    labs(x = 'Time (s)', y = 'Lickrate (Hz)') + 
+    xlim(-4.95, 4.95) +
+    scale_colour_manual(values = c(`Left Lick` = '#1b9e77', 
+                                     `Right Lick` = '#d95f02')) + 
+    theme_minimal() + 
+    theme(legend.title = element_blank())
+```
+
+```{r fig.cap = '(ref:significance-2)', eval = FALSE}
+df_metric %>% 
+    filter(mouse %in% c("gtmk443e", "gtmk443g", "gtmk443h")) %>% 
+    mutate(mouse = case_when(
+        mouse == 'gtmk443e' ~ 'M04',
+        mouse == 'gtmk443g' ~ 'M06',
+        mouse == 'gtmk443h' ~ 'M07'
+    )) %>% 
+    ggplot(aes(x = forcats::fct_rev(scope), y = rate, color = colour_event,
+                             linetype = perturbation, shape = perturbation)) + 
+    facet_grid(mouse ~ previous) + 
+    stat_summary(geom = 'pointrange', fun.data = 'mean_cl_boot', position = position_dodge(width = 1)) + 
+    geom_vline(xintercept = 1.5, color = 'grey50') +
+    scale_x_discrete(breaks = NULL) + 
+    scale_shape_manual(values = c(`Perturbation` = 1, `No perturbation` = 19)) +
+    scale_colour_manual(values = c(`Left Lick` = '#1b9e77', 
+                                     `Right Lick` = '#d95f02')) + 
+    theme_minimal() + 
+    labs(x = NULL, y = 'Average Lickrate (Hz)') +
+    ylim(0, NA) +
+    theme(legend.title = element_blank(),
+          legend.position = 'top') + 
+    geom_segment(aes(x = xmin, xend = xmin, y = 4.3, yend = 4.5,
+                     color = NULL, linetype = NULL, shape = NULL, group = group),
+                 show.legend = FALSE) + 
+    geom_segment(aes(x = xmin, xend = xmin + 0.25, y = 4.5, yend = 4.5), 
+                 inherit.aes = FALSE,
+                 data = df_metric %>% 
+                     filter(strategy_perturbation == 'No')) + 
+    geom_text(aes(x = xmin, y = 4.6, label = annotation), inherit.aes = FALSE,
+              data = df_ab,
+              vjust = 'bottom', hjust = 'middle')
+```
+(ref:significance-2) Average lickrates in the second before and after the stimulus onset in all sessions of mice M04, M06, and M07. For a more detailed description, see figure \@ref(fig:a-significance).
+
+```{r, fig.cap = 'Reaction of M08, M09, and M11 to strategy perturbations'}
+cd_pert %>% 
+    filter(mouse %in% c("gtmk444d", "gtmk444e", "gtmk444g")) %>% 
+    mutate(mouse = case_when(
+        mouse == 'gtmk444d' ~ 'M08',
+        mouse == 'gtmk444e' ~ 'M09',
+        mouse == 'gtmk444g' ~ 'M11'
+    )) %>% 
+    #group_by(colour_event, perturbation, time, previous, mouse) %>% 
+    #summarise(rate = mean(rate)) %>% 
+    ggplot(aes(x = time, y = rate,
+                                   colour = colour_event,
+                                   linetype = perturbation)) + 
+    geom_vline(xintercept = 0, colour = 'grey50') +
+    stat_summary(geom = 'line', fun.y = 'mean') + 
+    facet_grid(mouse ~ previous) +
+    labs(x = 'Time (s)', y = 'Lickrate (Hz)') + 
+    xlim(-4.95, 4.95) + 
+    scale_colour_manual(values = c(`Left Lick` = '#1b9e77', 
+                                     `Right Lick` = '#d95f02')) + 
+    theme_minimal() + 
+    theme(legend.title = element_blank())
+```
+
+```{r fig.cap = '(ref:significance-3)', eval = FALSE}
+df_metric %>% 
+    filter(mouse %in% c("gtmk444d", "gtmk444e", "gtmk444g")) %>% 
+    mutate(mouse = case_when(
+        mouse == 'gtmk444d' ~ 'M08',
+        mouse == 'gtmk444e' ~ 'M09',
+        mouse == 'gtmk444g' ~ 'M11'
+    )) %>% 
+    ggplot(aes(x = forcats::fct_rev(scope), y = rate, color = colour_event,
+                             linetype = perturbation, shape = perturbation)) + 
+    facet_grid(mouse ~ previous) + 
+    stat_summary(geom = 'pointrange', fun.data = 'mean_cl_boot', position = position_dodge(width = 1)) + 
+    geom_vline(xintercept = 1.5, color = 'grey50') +
+    scale_x_discrete(breaks = NULL) + 
+    scale_shape_manual(values = c(`Perturbation` = 1, `No perturbation` = 19)) +
+    scale_colour_manual(values = c(`Left Lick` = '#1b9e77', 
+                                     `Right Lick` = '#d95f02')) + 
+    theme_minimal() + 
+    labs(x = NULL, y = 'Average Lickrate (Hz)') +
+    ylim(0, NA) +
+    theme(legend.title = element_blank(),
+          legend.position = 'top') + 
+    geom_segment(aes(x = xmin, xend = xmin, y = 4.3, yend = 4.5,
+                     color = NULL, linetype = NULL, shape = NULL, group = group),
+                 show.legend = FALSE) + 
+    geom_segment(aes(x = xmin, xend = xmin + 0.25, y = 4.5, yend = 4.5), 
+                 inherit.aes = FALSE,
+                 data = df_metric %>% 
+                     filter(strategy_perturbation == 'No')) + 
+    geom_text(aes(x = xmin, y = 4.6, label = annotation), inherit.aes = FALSE,
+              data = df_ab,
+              vjust = 'bottom', hjust = 'middle')
+```
+(ref:significance-3) Average lickrates in the second before and after the stimulus onset in all sessions of mice M08, M09, and M11. For a more detailed description, see figure \@ref(fig:a-significance).

@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1565186219140.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "4C4FE046",
+    "lastKnownWriteTime" : 1565776961,
+    "last_content_update" : 1565776961391,
+    "path" : "~/Documents/thesis-tt-19/thesis-tt-19/03-results.Rmd",
+    "project_path" : "03-results.Rmd",
+    "properties" : {
+        "cursorPosition" : "534,13",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 11,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

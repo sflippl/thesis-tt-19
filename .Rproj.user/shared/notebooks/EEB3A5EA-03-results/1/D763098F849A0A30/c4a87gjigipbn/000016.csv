@@ -1,0 +1,10 @@
+"0","df_hist <- 
+    df_hist %>% 
+    ungroup() %>%
+    full_join(expand, by = c('event_nr', 'direction', 'time', 'strategy_perturbation', 'true_strategy')) %>% 
+    mutate(rate = if_else(is.na(rate), 0, rate),
+           colour_event = if_else(direction == 'L', 'Left Lick', 'Right Lick'),
+           perturbation = if_else(strategy_perturbation == 'Yes', 'Perturbation', 'No perturbation'),
+           previous = if_else(true_strategy == 'left', ""'Leftwards!'"", ""'Rightwards!'""))
+"
+"2","Column `direction` joining character vector and factor, coercing into character vector"

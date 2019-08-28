@@ -1,0 +1,15 @@
+"2","FileNotFoundError: [Errno 2] No such file or directory: '/home/sflippl/.local/lib/python3.7/site-packages/thesistt19/analysis/cache'
+
+Detailed traceback: 
+  File ""<string>"", line 1, in <module>
+  File ""/home/sflippl/.local/lib/python3.7/site-packages/thesistt19/__init__.py"", line 11, in <module>
+    import thesistt19.analysis
+  File ""/home/sflippl/.local/lib/python3.7/site-packages/thesistt19/analysis/__init__.py"", line 11, in <module>
+    from thesistt19.analysis.CenteredData import *
+  File ""/home/sflippl/.local/lib/python3.7/site-packages/thesistt19/analysis/CenteredData.py"", line 38, in <module>
+    class CenteredData:
+  File ""/home/sflippl/.local/lib/python3.7/site-packages/thesistt19/analysis/CenteredData.py"", line 58, in CenteredData
+    cache_names = get_cache()
+  File ""/home/sflippl/.local/lib/python3.7/site-packages/thesistt19/analysis/CenteredData.py"", line 52, in get_cache
+    files = os.listdir(cache_path)
+"

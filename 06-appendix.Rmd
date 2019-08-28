@@ -1,0 +1,11 @@
+# (APPENDIX) Appendix {-}
+
+`r if(knitr::is_latex_output())'
+\\pagebreak
+\\phantom{M}
+\\vfill
+\\begin{Huge}
+\\textbf{Appendix}
+\\end{Huge}
+\\vfill
+\\thispagestyle{empty}'`

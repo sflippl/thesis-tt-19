@@ -1,0 +1,60 @@
+# Methods
+
+## Behavioral Paradigm and Design Variations
+
+The broad behavioral paradigm has been described in the introduction. The contingency, in which a right licks leads to a lower tone and a left lick leads to a higher tone, will be referred to as *RL-contingency*. The reverse contingency -- i. e. the one where a right lick leads to a higher tone and a left lick leads to a lower tone -- will be referred to as *LR-contingency*. ^[As a brief remark, the latter has been referred to as the reverse contingency for the sole purpose of an easier description. Since the choice of the contingency direction is arbitrary, they will from now on be referred as *RL* and *LR*.]
+
+Targeted perturbation to this behavioral paradigm have been introduced to adress the three questions introduced above.
+
+### The Acquisition Question
+
+The first step to answer the Acquisition Question regarded observing behavior during the normal task. Different sounds essentially induced different strategies: 'Lick Left!', 'Lick Right!', and 'Success!'. The former two are of interest for this question. A first indicator that the mice had solved the task would be given if their licking behavior was consistent with these strategies. Put differently, successful mice would lick to the left more often when the correct strategy was 'Lick Left!', and would lick to the right more often when the correct strategy was 'Lick Right!'.^[Note that the actual metric is slightly more complicated -- see 'Results'.]
+
+However, a necessary condition for task acquisition was defined as sound-guided behavior. Whereas the observation above is therefore necessary for mice to have learned the task, it is not sufficient, since it does not rule out an alternative explanations only taking into account learned motor patterns. In particular, suppose that the mouse had learned to follow up on lick bouts to the left with lick bouts to the right, and to follow up on lick bouts to the right with lick bouts to the left. Following this strategy, the mice would be in an area after the first bout, where switching bout direction would always be correct, therefore satisfying the previous condition without solving the task.
+
+This motivates Strategy Perturbations, in which large sudden perturbations of the frequency may lead to a different strategy or the same one. In the period after such a randomly initiated perturbation, the behavior is therefore only driven by the sound. If the behavior after a jump from 'Lick Left!' to 'Lick Right!' is therefore more consistent with the behavior under a 'Lick Right!' strategy than the behavior under a 'Lick Left!' strategy, this behavior can only be induced by the sound. This test can therefore determine whether the mice have indeed learned the task -- and therefore answer the Acquisition Question.
+
+Furthermore, this analysis is only truly viable until the next reward since that reward might shape the behavior independent of the sound. In order to make that period as long as possible in some scenarios, Reward Perturbations disrupted a possible reward.
+
+### The Representation Question
+
+Since Strategy Perturbations are often so large that they correspond to significant sensory oddballs, it is scarcely possible to use them to investigate neuronal representations of the sensorimotor contingency. Instead, smaller Sensorimotor Perturbations are required that follow the regular sensory pattern, but do not respect the sensorimotor contingency. Sensitivity of neurons to those sensorimotor perturbations would answer the representation question.
+
+### The Integration Question
+
+Investigating the mechanism by which sensory evidence and motor behavior is integrated in auditory cortex, requires Sensorimotor Perturbations, as well. Whereas simple sensitivity to those perturbations demonstrates motor feedback to auditory cortex, an integrative mechanism would imply a multimodal estimation of auditory input. This can be demonstrated by studying the different responses according to different levels of sound intensity. These different levels are introduced using Sound Modulation. Whereas usually, the tones were presented at 60-65 dB, the modulated tones were presented at 40-45 dB. Since such variation risked mice interpreting this modulation as task-relevant, such Sound Modulations were scarcely presented and might therefore not amount to sufficient evidence using current data.
+
+## Data Acquisition and Preparation
+
+Behavioral data was acquired using eleven mice from three litters: one male batch with three animals (GTMK44.3a-c), and two female batches with four animals each (GTMK44.3e-h; GTMK44.4e-h). The male batch and the first female batch were pretrained in a behavioral box before executing the task under the microscope setup, whereas the second female batch was microscoped from the beginning.
+
+The task was controlled using Matlab (&copy; Mathworks, 2018) with the toolboxes ??? and Python [@python] using the packages ???. The licks were detected using the electrical circuit introduced by @slotnick2009lick.
+
+Due to a malformed headbar, one mouse (GTMK44.3f) could not be imaged. Neuronal data from the remaining ten animals was acquired using ???. This data was preprocessed using suite2p [@pachitariu2017suite2p] in Python. The ensuing data analysis dealt with the deconvolved spikes.
+
+## Data Analysis
+
+The data analysis investigated the behavioral and neuronal response to the task paradigm and its perturbations and modulations. It was conducted in Python using the packages ???. In the following, the mathematical and definitory details regarding the analysis are provided. A more intuitive perspective will be given in the results section.
+
+All analysis tools can be found in the accompanying package `toneworld`, which can be downloaded from Github by running
+
+```{bash eval = FALSE, echo = TRUE}
+pip install git+https://github.com/sflippl/toneworld
+```
+
+In order to allow for an easy independent exploration, the package will be referenced throughout the analysis. As an alternative, the results can be explored using an interactive dashboard that may be started by running the following code in Python:
+
+```{python eval = FALSE, echo = TRUE}
+import toneworld.analysis as an
+an.run_dashboard()
+```
+
+### Behavioral data
+
+For each animal, the behavioral data is organized into blocks of which one or more constitute a daily session. In order to obtain the behavioral data regarding one particular session, the mouse, the day, and the block must therefore be specified. This behavioral data records the sounds presented, the licks detected, and the rewards presented.
+
+### Neuronal Data
+
+???
+
+### Single-Event-based analysis

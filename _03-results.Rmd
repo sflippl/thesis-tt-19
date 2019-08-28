@@ -1,0 +1,260 @@
+# Results
+
+## The Acquisition Question
+
+This section discusses the behavioral evidence that the mice have learned the sensorimotor contingency and used it in solving the task. Qualitatively, this is established in the first subsection. The second subsection discusses the extent to which the mice behaviorally represent the sensorimotor contingency.
+
+### The mice have learned the sensorimotor contingency.
+
+This section aims to establish that the mice have a behavioral representation of the sensorimotor contingency. As an example a block of mouse GTMK44.4f will be analyzed.
+
+#### Lickrates Analysis
+
+```{python lickrates-prep, cache = TRUE}
+ex_lick_bouts = tw.CenteredData(
+    tw.LickBout(windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'], days = ['2019-07-01'], blocks = ['C'],
+    sounds = True, center_columns = ['licks', 'rewards']
+)
+event = (
+    ex_lick_bouts.event_illustration(selection = tw.BusySelection(2, 40, 4325)) +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+raster = (
+    ex_lick_bouts.rastermap(selection = tw.BusySelection(20, 40, 4325)) +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+hist = (
+    ex_lick_bouts.vis_histogram() +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+ex_lick_bouts_f = tw.CenteredData(
+    tw.LickBout(windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f']
+)
+hist_f = (
+    ex_lick_bouts_f.vis_histogram() +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+gg.ggsave(event, filename = 'figs/event.pdf')
+gg.ggsave(raster, filename = 'figs/raster.pdf')
+gg.ggsave(hist, filename = 'figs/hist.pdf')
+gg.ggsave(hist_f, filename = 'figs/hist_f.pdf')
+
+```
+
+
+```{r lickrates, results = 'markup', fig.show = 'hold', out.width='45%', fig.cap='(ref:lickrates)', fig.subcap=paste0('(ref:lickrates-',c('a','b','c','d'),')'), fig.sep = c("\\hfill", "\\newline", "\\hfill", ""), fig.align = 'center'}
+knitr::include_graphics(paste0('figs/', c('event', 'raster', 'hist', 'hist_f'), '.pdf'))
+```
+
+
+
+(ref:lickrates) Example lickrate analysis of the onset of left and right lick bouts. The first three plots refer to one session in one animal (GTMK44.4f on July 1 2019). Appendix B contains the histograms for the other animals and appendix A explains how to recreate the three types of figures for an arbitrary selection of sessions, both interactively using the dashboard, and from within Python.
+
+(ref:lickrates-a) Examples of the event onset. A left lick bout is defined as a lick that was not preceded by a lick within a 500 ms interval. Whereas such a perspective allows a detailed analysis of single events, these events are not necessarily representative of the general pattern.
+
+(ref:lickrates-b) A rastermap of 20 instances of a left or right lick bout respectively.
+
+(ref:lickrates-c) A histogram of the left and right licks centered around the onset of left and right lick bouts within one session. By definition, no left licks occur in the 500 ms before a left lick bout. The same thing applies for right licks and right lick bouts. Generally, the lickrates from one bin of 250 ms to the next bin still fluctuate notably, which indicates considerable random variation even within the averaged data. However, it is difficult to assess the variation in the original dataset.
+
+(ref:lickrates-d) A histogram of the left and right licks centered around the onset of the lick bouts for all sessions in GTMK44.4f. The random fluctuations are largely eliminated. Generally, left licks are more frequently observed than right licks. Prior to the onset of a lick bout, the lickrate into the same direction decreases even before it vanishes by definition, while the lickrate into the opposite direction first increases before dropping immediately before the bout. Whereas the lickrate analysis provides a good general intuition of lick bouts that is compatible with its definition, without such a definition, it would be more difficult to interpret certain subtleties that arises due to the autocorrelation of the lickrates. For example, it is not immediately clear why the baseline of left licks is higher before a lick bout than after such an event.
+
+In the case of left lick bouts, the left lickrate decreases even before it vanishes by definition, while the right lickrate increases before it decreases along with the onset of the left lick bout. After this onset the left lick bout gradually decreases, returning to its usual level of about 1 Hz after around 3 seconds. Similarly to the case above, the right lickrate decreases before the onset of a right lick bout, though less markedly. This might be due to its lower baseline lickrate. Furthermore, the left lickrate first increases and then decreases. The right lickrate returns to its baseline of about 0.5 Hz after about 3 seconds. Notably, right lick bouts are followed by a higher left lickrate, an effect that cannot be seen in the inverse case. Whereas the lickrate analysis provides a good general intuition of lick bouts that is compatible with its definition, without such a definition, it would be more difficult to interpret certain subtleties that arises due to the autocorrelation of the lickrates. For example, it is not immediately clear why the baseline of left licks is higher before a lick bout than after such an event.
+
+
+#### Strategy
+
+```{python strategy-lickrate-prep, cache = TRUE}
+strat = tw.CenteredData(
+    tw.SoundEvents(groups = ['strategy'], filters = ['nosuccess', 'change'],
+                   windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'], days = ['2019-07-01'], blocks = ['C'],
+    sounds = True, center_columns = ['licks', 'rewards']
+)
+strat_event = (
+    strat.event_illustration(selection = tw.BusySelection(2,20,234)) +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+strat_raster = (
+    strat.rastermap(selection = tw.SimpleSelection(20, 4325)) +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+strat_hist = (
+    strat.vis_histogram() +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+ex_strat_f = tw.CenteredData(
+    tw.SoundEvents(groups = ['strategy'], filters = ['nosuccess', 'change'],
+                   windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f']
+)
+strat_hist_f = (
+    ex_strat_f.vis_histogram() +
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+gg.ggsave(strat_event, filename = 'figs/strat_event.pdf')
+gg.ggsave(strat_raster, filename = 'figs/strat_raster.pdf')
+gg.ggsave(strat_hist, filename = 'figs/strat_hist.pdf')
+gg.ggsave(strat_hist_f, filename = 'figs/strat_hist_f.pdf')
+```
+
+```{r strategy-lickrate, fig.show = 'hold', out.width = '45%', fig.cap = '(ref:strategy-lickrate)', fig.subcap = paste0('(ref:strategy-lickrate-',c('a','b','c','d'),')'), fig.sep = c("\\hfill", "\\newline", "\\hfill", ""), fig.align = 'center', results = 'markup'}
+knitr::include_graphics(paste0('figs/', c('strat_event', 'strat_raster', 'strat_hist', 'strat_hist_f'), '.pdf'))
+```
+
+(ref:strategy-lickrate) Example lickrate analysis after a strategy event. The first three plots refer to one session in one animal (GTMK44.4f on July 1 2019). Appendix B contains the histograms for the other animals and appendix A explains how to recreate the three types of figures for an arbitrary selection of sessions, both interactively using the dashboard, and from within Python.
+
+(ref:strategy-lickrate-a) Example for a possible strategy event. This term refers to a changing sound that does not lie within the rewarded region. The event is grouped according to the strategy ('Lick Left!' or 'Lick Right!') the sound indicates. Some of them are due to a perturbation (left column), some of them due to the normal contingency. Within the normal contingency, a directed strategy event is preceded by licks into the opposite direction.
+
+(ref:strategy-lickrate-b) In the rastermap of several events, it is apparent that left licks are more common than right licks. However, in the 'Lick Right!' panel, they are replaced by right licks after stimulus onset in a couple of events. It is unclear, however, whether this is random or due to an influence of the sound.
+
+(ref:strategy-lickrate-c) The histogram reinforces the observation of a higher left lickrate. This lickrate, however, increases after the onset of a 'Lick Right!' strategy event, whereas the right lickrate remains constant. On the other hand, the right lickrate decreases and the left lickrate increases after a 'Lick Left!' strategy event. This suggests a response that is sensitive to the auditory stimulus.
+
+(ref:strategy-lickrate-d) A histogram of the lickrate centered around strategy events for all sessions of GTMK44.4f. In this case, the stimulus sensitivity of the response to a 'Lick Left!' stimulus is more apparent, though such an onset is also preceded by an increasing right lickrate (as it should be; see figure a), pointing towards the confounding influence of behavioral autocorrelation (see main text). In the case of a 'Lick Right!' event, the lickrates in both directions decrease. However, the right lickrate apparently experiences a weaker decrease, both in relative and absolute terms. Though this analysis suggests an overall sensitivity to the auditory stimulus, the extent to which this sensitivity can be explained away by behavioral autocorrelation and random fluctuations remains unclear.
+
+```{python strategy-pert-lickrate-prep, cache = TRUE}
+ex_pert = tw.CenteredData(
+    tw.SoundEvents(groups = ['strategy', 'strategy_perturbation'], 
+                   filters = ['nosuccess', 'perturbation'],
+                   windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'], days = ['2019-07-01'],
+    center_columns = ['licks', 'rewards'], sounds = True
+)
+pert_event = (
+    ex_pert.event_illustration(selection = tw.SimpleSelection(1, 155)) + 
+    gg.facet_wrap('label', ncol = 2) + 
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+pert_f = tw.CenteredData(
+    tw.SoundEvents(groups = ['strategy', 'strategy_perturbation'], 
+                   filters = ['nosuccess', 'perturbation'],
+                   windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f']
+)
+pert_raster = (
+    pert_f.rastermap(selection = tw.SimpleSelection(10, 130)) + 
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+pert_hist = (
+    pert_f.vis_histogram() + 
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+pert_lines = (
+    pert_f.perturbation_lines() + 
+    gg.theme(subplots_adjust = {'top': 0.85})
+)
+gg.ggsave(pert_event, filename = 'figs/pert_event.pdf')
+gg.ggsave(pert_raster, filename = 'figs/pert_raster.pdf')
+gg.ggsave(pert_hist, filename = 'figs/pert_hist.pdf')
+gg.ggsave(pert_lines, filename = 'figs/pert_lines.pdf')
+```
+
+```{r strategy-pert-lickrate, fig.show = 'hold', out.width = '45%', fig.cap = '(ref:strategy-pert-lickrate)', fig.subcap = paste0('(ref:strategy-pert-lickrate-',c('a','b','c','d'),')'), fig.sep = c("\\hfill", "\\newline", "\\hfill", ""), fig.align = 'center', results = 'markup'}
+knitr::include_graphics(paste0('figs/', c('pert_event', 'pert_raster', 'pert_hist', 'pert_lines'), '.pdf'))
+```
+
+(ref:strategy-pert-lickrate) Example lickrate analysis of strategy perturbations. The first plot refers to one day in one animal (GTMK44.4f on July 1 2019). Due to the reduced number of strategy perturbation compared to strategy events or lick bouts, the remianing plots concern all sessions of GTMK44.4f. Appendix B contains the histograms and line plots for the other animals and appendix A explains how to recreate the four types of figures for an arbitrary selection of sessions, both interactively using the dashboard, and from within Python.
+
+(ref:strategy-pert-lickrate-a) Example of the possible strategy perturbations. This term refers to a perturbation that does not begin within the rewarded region. It compares the outcome according to the sensorimotor contingency with the outcome that actually occurred. In some cases, the strategy remains the same, in others, it switches. Since strategy events are often preceded by licks in the opposite direction, an autocorrelative strategy, in which the mouse regularly changes its lick direction, could explain away the observations in \@ref(fig:strategy-lickrate). If the behavior were not sound-driven, the strategy perturbations would not induce a change in behavior. 
+
+(ref:strategy-pert-lickrate-b) The rastermap demonstrates the higher lickrate into the opposite direction before the onset of a strategy perturbation. Overall, the switch in lick direction is happening in the case of a 'Lick Left!' strategy. In contrast, this behavior is clearly structured differently in the case of a strategy perturbation. In the case of a previous 'Lick Right!' strategy, there is no discernible effect due to marked predominance of left licks.
+
+(ref:strategy-pert-lickrate-c) A histogram of the responses of GTMK44.4f to the different events. In the case of no strategy perturbation, the histogram shows the same autocorrelative pattern as for the simpler strategy events. In the case of a strategy perturbation, however, this pattern breaks apart. Whereas licks into the opposite direction usually decrease after stimulus onset, they remain at a constant, higher level in the case of a strategy switch. Furthermore, the increased lickrate into the same direction after onset is attenuated in the case of a strategy perturbation.
+
+(ref:strategy-pert-lickrate-d) This is well illustrated by this lineplot of the histogram from panel c. Besides minor differences (see main text), the lickrate pattern before onset looks similar between strategy perturbations and no strategy perturbations. In the case of a strategy perturbation, the licks into the unperturbed direction decrease or remain constant, whereas the ones into the perturbed direction increase. This suggests that behavior must be sound-driven and the animals have learned the contingency.
+
+#### NCLD Analysis
+
+```{python cld-ex-table-prep, cache = TRUE}
+sel = tw.BusySelection(2, 40, 4325)
+ex_lick_bouts = tw.CenteredData(
+    tw.LickBout(windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'], days = ['2019-07-01'], blocks = ['C'],
+    sounds = True, center_columns = ['licks', 'rewards']
+)
+get_selection = sel.select(ex_lick_bouts.centered)
+get_selection = ex_lick_bouts.label_df(get_selection)
+lickrate_computation = (
+    gg.ggplot(get_selection, gg.aes(x = 'time', y = -0.05, fill = 'action')) + 
+    gg.stat_function(
+        fun = tw.ExpKernel().function, 
+        data = pd.DataFrame({
+            'time': np.array([-5, 0]),
+            'action': np.array(['Past', 'Past'])
+        }),
+        geom = 'area',
+        alpha = .5,
+        xlim = (-5, 0)
+    ) + 
+    gg.stat_function(
+        fun = tw.ExpKernel().function, 
+        data = pd.DataFrame({
+            'time': np.array([0, 5]),
+            'action': np.array(['Future', 'Future'])
+        }),
+        geom = 'area',
+        alpha = .5,
+        xlim = (0, 5)
+    ) +
+    gg.geom_tile(gg.aes(width = 0.1, height = 0.04)) + 
+    gg.facet_grid(['event_nr', 'label'], 
+                  labeller = gg.labeller(rows = lambda x: '')) + 
+    gg.scale_fill_manual(values = ex_lick_bouts.colors) + 
+    gg.labs(x = 'Time', y = 'Weight') + 
+    gg.theme(legend_position = 'top', 
+             legend_title = gg.element_blank(),
+             subplots_adjust = {'top': 0.85})
+)
+gg.ggsave(lickrate_computation, filename = 'figs/lickrate_computation.pdf')
+lick_bout_metric = ex_lick_bouts.get_metric(
+    by = ['mouse', 'day', 'block', 'event_nr'], 
+    metrics = [tw.Lickrate(kernel = tw.ExpKernel()),
+               tw.LickrateDifference(),
+               tw.CLD()])
+lick_bout_metric = ex_lick_bouts.label_df(lick_bout_metric)
+lick_bout_metric['event_nr'] = np.array([
+    "_".join([row.mouse, row.day, row.block, row.event_nr]
+    ) for id, row in lick_bout_metric.iterrows()
+])
+lick_bout_metric = sel.select(
+    lick_bout_metric, reselect = True
+    )
+lick_bout_metric['position'] = np.array([
+    'top' if event_nr == '0' else 'bottom' for event_nr in lick_bout_metric[
+    'event_nr']
+])
+lick_bout_metric = lick_bout_metric[[
+    'event', 'position', 'metric', 'scope', 'action', 'mean'
+]].sort_values(['event', 'position', 'metric', 'scope', 'action'],
+               ascending = [True, False, False, False, False]).reset_index(
+               drop = True
+               )
+lick_bout_metric.to_feather('data/lick_bout_metric.feather')
+```
+
+```{r cld-ex, fig.cap = '(ref:cld-ex)', results = 'markup'}
+knitr::include_graphics('figs/lickrate_computation.pdf')
+```
+
+(ref:cld-ex) When the lickrate as a metric is being computed, the sounds are weighted according to the distance from the event onset using the kernel displayed in this figure. This lickrate is being computed for left and right licks (displayed on the bottom of the plot), as well as for a future and a past scope. The kernel allows this nonlinear lickrate to take events into account that occur at a later time without neglecting the importance of immediately adjacent events. The Lickrate Difference is computed by subtracting the left lickrate from the right lickrate and provides a summary the licking behavior before and after the onset of a certain event. Right licks were or will be predominant if this difference is positive, left licks were or will be predominant if this difference is negative. Finally, the Change in Lickrate Difference is computed by subtrating the future Lickrate Difference from the past Lickrate Difference. This metric indicates the effect of an event onset. The event leads to an increase in right licks if the CLD is positive and to an increase in left licks if it is negative.
+
+
+```{r cld-ex-table, results = 'asis'}
+lick_bout_metric <- feather::read_feather('data/lick_bout_metric.feather')
+knitr::kable(lick_bout_metric, 'latex', row.names = FALSE, 
+             col.names = c('Bout Direction', 'Event', 'Metric', 
+                           'Scope', 'Lick Direction', ''),
+             caption = 'Metrics for the example events in the preceding figure. The events are referred to by the direction of the bout and the position (top or bottom of the corresponding panel of the figures. Some metrics take into account lick direction or scope, others do not. In the latter case, the corresponding information is omitted.',
+             booktabs = TRUE,
+             digits = 2)
+```
+
+#### Quantifying the acquisition of the contingency
+
+```{python lick-bout-quant-prep, cache = TRUE, eval = FALSE}
+ex_lick_bouts.
+```
+
+
+### Quantitative evaluation of baseline behavior and behavioral contingency representation

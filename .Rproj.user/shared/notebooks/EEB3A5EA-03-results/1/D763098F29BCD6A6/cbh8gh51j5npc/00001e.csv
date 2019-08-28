@@ -1,0 +1,15 @@
+"1","<ggplot: (-9223363273831761562)>
+
+/home/sflippl/.local/lib/python3.7/site-packages/plotnine/layer.py:517: MatplotlibDeprecationWarning: isinstance(..., numbers.Number)
+  return not cbook.iterable(value) and (cbook.is_numlike(value) or
+/home/sflippl/.local/lib/python3.7/site-packages/plotnine/layer.py:517: MatplotlibDeprecationWarning: isinstance(..., numbers.Number)
+  return not cbook.iterable(value) and (cbook.is_numlike(value) or
+/home/sflippl/.local/lib/python3.7/site-packages/plotnine/layer.py:517: MatplotlibDeprecationWarning: isinstance(..., numbers.Number)
+  return not cbook.iterable(value) and (cbook.is_numlike(value) or
+/home/sflippl/.local/lib/python3.7/site-packages/plotnine/layer.py:517: MatplotlibDeprecationWarning: isinstance(..., numbers.Number)
+  return not cbook.iterable(value) and (cbook.is_numlike(value) or
+/home/sflippl/.local/lib/python3.7/site-packages/plotnine/layer.py:449: UserWarning: geom_tile : Removed 1 rows containing missing values.
+  self.data = self.geom.handle_na(self.data)
+/home/sflippl/.local/lib/python3.7/site-packages/plotnine/layer.py:449: UserWarning: geom_tile : Removed 1 rows containing missing values.
+  self.data = self.geom.handle_na(self.data)
+"

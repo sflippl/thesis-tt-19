@@ -1,0 +1,33 @@
+"0","cd_pert <- feather::read_feather('general_hist.feather') %>% 
+    filter(true_strategy != 'success') %>% 
+    mutate(time = round(time*4)/4+1/8) %>% 
+    group_by(label, direction, time, strategy_perturbation, true_strategy, event_nr) %>%
+    summarize(rate = n()/4)
+"
+"2","Coercing int64 to double"
+"0","cd_pert <- feather::read_feather('general_hist.feather') %>% "
+"0","    filter(true_strategy != 'success') %>% "
+"0","    mutate(time = round(time*4)/4+1/8) %>% "
+"0","    group_by(label, direction, time, strategy_perturbation, true_strategy, event_nr) %>%"
+"0","    summarize(rate = n()/4)"
+"2","Coercing int64 to double"
+"0","expand <- "
+"0","    expand.grid(event_nr = unique(cd_pert$event_nr),"
+"0","                direction = unique(cd_pert$direction),"
+"0","                time = unique(cd_pert$time)) %>% "
+"0","    as_tibble() %>% "
+"0","    left_join("
+"0","        cd_pert %>% ungroup() %>%  select(event_nr, strategy_perturbation, true_strategy) %>% unique(),"
+"0","        by = c('event_nr')"
+"0","    )"
+"2","Column `event_nr` joining factor and character vector, coercing into character vector"
+"0","cd_pert <-"
+"0","    cd_pert %>% "
+"0","    ungroup() %>% "
+"0","    full_join(expand, by = c('event_nr', 'direction', 'time', 'strategy_perturbation', 'true_strategy')) %>% "
+"0","    mutate(rate = if_else(is.na(rate), 0, rate),"
+"0","           colour_event = if_else(direction == 'L', 'Left Lick', 'Right Lick'),"
+"0","           perturbation = if_else(strategy_perturbation == 'Yes', 'Perturbation', 'No perturbation'),"
+"0","           previous = if_else(true_strategy == 'left', ""'Leftwards!'"", ""'Rightwards!'""),"
+"0","           mouse = str_split_fixed(event_nr, ""_"", 2)[,1])"
+"2","Column `direction` joining character vector and factor, coercing into character vector"

@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99d (TeX Live 2017/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: thesis-tt-19.aux
+The style file: apalike.bst
+Database file #1: book.bib.bib
+Database file #2: packages.bib.bib
+Warning--empty publisher in oliphant2006numpy
+Warning--empty journal in python
+You've used 78 entries,
+            1935 wiz_defined-function locations,
+            943 strings with 17212 characters,
+and the built_in function-call counts, 31348 in all, are:
+= -- 3072
+> -- 1389
+< -- 35
++ -- 471
+- -- 468
+* -- 2852
+:= -- 5508
+add.period$ -- 230
+call.type$ -- 78
+change.case$ -- 608
+chr.to.int$ -- 75
+cite$ -- 80
+duplicate$ -- 1064
+empty$ -- 2118
+format.name$ -- 586
+if$ -- 5946
+int.to.chr$ -- 4
+int.to.str$ -- 0
+missing$ -- 62
+newline$ -- 389
+num.names$ -- 234
+pop$ -- 481
+preamble$ -- 1
+purify$ -- 624
+quote$ -- 0
+skip$ -- 807
+stack$ -- 0
+substring$ -- 2357
+swap$ -- 90
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 466
+warning$ -- 2
+while$ -- 264
+width$ -- 0
+write$ -- 987
+(There were 2 warnings)

@@ -1,0 +1,54 @@
+# Introduction {#intro}
+
+`r if(knitr::is_latex_output()) '\\pagenumbering{arabic}
+\\setcounter{page}{1}'`
+
+The extraction of statistical structures from a natural environment is a key hallmark of intelligence that is well understood for carefully restricted environments. However, many computational theories of intelligence do not make conflicting predictions under such restrictions. For the purpose of a sharper discrimination between those theories as well as their particular implementation, a novel sensorimotor contingency has been taught to mice. This contingency, as well as many possible variations, can be implemented with standard tools and inexpensive additional material and provides a new framework for complex learning in a simple model system. After demonstrating that the mice have indeed learned the contingency, the acquired behavioral and neuronal information therefore sheds light on how such sensorimotor contingencies are learned. This might help in understanding how more complex sensorimotor contingencies, as humans encounter them in their daily lives, are acquired, as well.
+
+In an attempt to understand statistical hallmark as a hallmark of intelligence, several computational motifs have been identified, including prediction error representation [@rao1999pc; @bayer2005reward; @rubin2016representation], sparse encoding [@olshausen1997sparse], Bayesian integration [@kording2004bayesian], and hierarchical processing [@friston2005pc; @dicarlo2012visual]. This motifs guide and flesh out three general and possibly complementary theories of intelligence.
+
+The generative theory posits the brain produces and interprets both sensory inputs and motor outputs as realizations of a probabilistic distribution. Among its most influential implementations has been the predictive coding theory [@friston2018pc], though precise implementational architectures and concrete predictions often remain elusive.
+
+The feedforward theory of intelligence frames the brain as a simple mapping from input to output. This works well for simple conditioning frameworks and specialized hierarchies such as the ventral visual stream. In particular, modern deep neural networks have a remarkable similarity in their processing steps to the neural representations across the ventral stream [@khalighrazavi2014deep; @yamins2016using]. In the domain of reinforcement learning, deep networks have also achieved human-level performance [@mnih2015human], though representational similarity remains to be investigated.
+
+Finally, the invariance theory of intelligence posits the key of intelligence to be the innate encoding of invariant structures, understanding, for example that moving to the right and then forward is equivalent to moving forward and then to the right [@battaglia2018relational]. In particular, grid cells have been proposed as a generalized representational system that extends far beyond their original function in spatial paradigms.
+
+In particular, sensorimotor learning is situated in the middle of these rich frameworks. [@wolpert2011principles] Its intricate connection to spatial behavior naturally positions this domain near grid cell theory. Furthermore, the constant prediction of sensory input from motor behavior may be understood in a generative context [@miall1996forward]. Finally, the direct behavioral relevance of sensorimotor learning in the form of motor output makes the importance of feedforward models clear as well.
+
+Largely, these theories in general as well as sensorimotor learning in particular, are investigated using innate statistical structures of the environment as much as possible. This includes, as an example, studies that investigate rodents' exploration of their environment using convential sensory information in connection to their motor behavior. Though modifications such as force fields are often included to investigate the adaptation of the sensorimotor feedback loop, this simply pertains to subtle adaptations of already existing contingencies, in particular between movement and visual input and movement and somatosensory input. These contingencies are stable not only across a rodent's lifetime, but across many generations. These mechanisms are therefore extremly specialized and well-conserved.
+
+However, adaptive behavior to a volatile environment is arguably the most important hallmark of intelligence and cannot fully be captured by relatively stable statistical structures. This is further emphasized by the fact that the latter do not allow for a discrimination between particular implementations of these general theories [see @saxe2011receptive]. Innate extraction of stable statistical structures is, without doubt, a remarkable and interesting phenomenon, but pales in comparison to the adaptation towards new environments. Humans are extremely adept at extracting novel, artificial sensorimotor contingencies, using tools to investigate objects, moving a cursor across a screen, and performing endoscopic surgery. Compared to more controlled paradigms, in which a computer has a choice of a few actions in order to win a game, these tasks are much more challenging, since the space of possible contingencies is virtually infinite. For this reason, artificial systems cannot operate in such an open environment. Put differently, the deep Q-network may beat a human at Atari games, but if it is put into a human body (granting a little suspension of disbelief) and allowed to explore a room with a human and an Atari, it will not even be able to participate in such a game.
+
+Artificial sensorimotor contingencies are therefore crucial to human behavior, easy for humans to extract, and impossible for state-of-the-art artificial systems. They therefore provide a viable candidate for a better discrimination between different theories and their implementation. They have previously been investigated in a top-down manner by recording humans perform complex tasks. Since it is currently impossible to construct realistic computational models of these scenarios, however, this approach is limited in its scope and cannot yield insight in the neuronal principles guiding learning.
+
+This dissertation has therefore instead investigated the extraction of a simple novel sensorimotor contingency in rodents. Mice have been taught to navigate in a tonespace by licking two rods positioned in front of them. This tonespace was indicated by a sound that was emitted every 500 ms. The sound's frequency decreased after they licked right, and increased after they licked left. (In a second contingency, this relationship was reversed.) In order to make this contingency behaviorally relevant and testable, the mice had to keep the tone in a specific frequency region in order to get rewarded. This task was only interesting insofar as it established the contingency. Figure \@ref(example-task) shows an example task over 5 seconds.
+
+```{python example-task, fig.cap = '(ref:example-task)', eval = FALSE}
+example_task_licks = [
+    {'L': 2, 'R': 0},
+    {'L': 2, 'R': 0},
+    {'L': 3, 'R': 0},
+    {'L': 0, 'R': 0}, 
+    {'L': 1, 'R': 3},
+    {'L': 0, 'R': 2},
+    {'L': 0, 'R': 1},
+    {'L': 0, 'R': 0},
+    {'L': 0, 'R': 0},
+    {'L': 0, 'R': 0}
+]
+example_task_event = tw.Event(tw.SimpleWindows(-1, 6), [0])
+example_task_art = tw.ArtificialData(example_task_event, example_task_licks)
+example_task_art.event_illustration()
+```
+(ref:example-task) Example of the task with the novel sensorimotor contingency. The tiles in the middle illustrate the mouse's action. As illustrated, following left licks the sound becomes higher, whereas right licks lead to lower sounds. More licks between two sounds lead to larger jumps. If the sound is between -1 and 1, the mouse gets rewarded on the sound it last licked.
+
+
+Due to its novelty, all representations of this artificial audito-motor space would be a direct consequence of learning the contingency and the behavioral and neuronal structure of this space would therefore shed light on the mechanism of learning sensorimotor contingencies and statistical patterns in general.
+
+Though the main focus of this dissertation was to explore this task and its neural and behavioral correlate, three hypotheses were of direct interest.
+
+The first hypothesis, naturally, aimed to investigate that the mice had actually learned the task and employed the correct strategy as given by the tones in a particular setting.
+
+Furthermore, sensorimotor representations of this contingency were hypothesized to be present in auditory cortex.
+
+Finally, the contingency was hypothesized to be learned in a generative rather than a feedforward manner. On the one hand, the mice may have learned to associate a particular sound with an ensuing motor pattern. On the other hand, the mice may have learned that a particular motor pattern elicits certain changes in sounds, which corresponds to a generative model. The final hypothesis aimed to investigate the tradeoff between these two modes of representations.

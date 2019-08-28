@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1565608347328.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "A82CB593",
+    "lastKnownWriteTime" : 94696812867416,
+    "last_content_update" : 1565608347328,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "99BD236",
+        "caption" : "df_metric",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=df_metric&cache_key=99BD236",
+        "displayedObservations" : "4688",
+        "environment" : "",
+        "expression" : "df_metric",
+        "object" : "df_metric",
+        "preview" : "0",
+        "totalObservations" : "4688",
+        "variables" : "7"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 13,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

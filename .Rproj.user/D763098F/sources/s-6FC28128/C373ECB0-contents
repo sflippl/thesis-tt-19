@@ -1,0 +1,66 @@
+\begin{titlepage}
+
+% Titlepage inspired by: https://www.overleaf.com/15991102jmmvbxxtbhfk#/61015645/
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Creating Novel Sensorimotor Responses in Auditory Cortex}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+
+
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE University of Oxford}\\[0.5cm] % Name of your university/college
+\textsc{\Large Department of Physiology, Anatomy, and Genetics}\\[1.5cm]
+
+
+\textsc{\Large MSc Neuroscience}\\[0.5cm] % Major heading such as course name
+\textsc{\large Trinity Term 2019\\Dissertation 2}\\[0.5cm] % Minor heading such as course title
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+\vfill
+
+\includegraphics[height=0.2\textheight]{figs/ox_sigil.eps}\\[1cm] % Include a department/university logo - this will require the graphicx package
+
+
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+\vfill
+
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{Large}
+\textsc{Candidate Number}\\1030208\\[1cm]
+\textsc{Word Count}\\8123\\[1cm]
+\textsc{Supervisors}\\
+\begin{tabular}{cc}
+Samuel Picard&
+Yves Weissenberger\\
+Andrew King&
+Johannes Dahmen
+\end{tabular}
+\end{Large}
+
+\vfill
+
+\end{titlepage}
+
+\pagenumbering{roman}
+\setcounter{page}{2}

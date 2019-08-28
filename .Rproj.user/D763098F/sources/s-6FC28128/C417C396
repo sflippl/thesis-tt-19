@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1567013319039.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "C417C396",
+    "lastKnownWriteTime" : 1567013588,
+    "last_content_update" : 1567013588,
+    "path" : "~/Documents/thesis-tt-19/thesis-tt-19/thesis-tt-19.tex",
+    "project_path" : "thesis-tt-19.tex",
+    "properties" : {
+        "cursorPosition" : "0,0",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 13,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "tex"
+}

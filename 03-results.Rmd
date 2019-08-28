@@ -1,0 +1,936 @@
+# Results
+
+## Acquisition
+
+This section discusses the behavioural evidence that the mice have learned the sensorimotor contingency. For the purpose of this analysis, this is assumed to be the case if the mice adapt their behaviour in a sensible and sound-driven manner, i. e. animals should lick in a manner that would bring the presented stimulus closer to the rewarded region. In particular, it is not sufficient if their behaviour can be explained by a behavioural policy that is based on a regular motor pattern that is independent of the sounds. It is possible to distinguish a sound-driven policy from such a motor-driven policy using the two groups of stimuli presented below. Based on these groups and focussing on mouse M10, the subsequent sections will discuss the acquisition of the contingency in all animals and the course of learning in M10 alone.
+
+### Distinguishing a sound-driven policy from a motor-driven policy
+
+The following paragraphs are going to explain how targeted variations of the task paradigm can distinguish a sound-driven policy from a policy based on learned motor patterns.
+
+At any given time, the spout the animal should lick is determined by the sounds the animal is hearing. In the excerpt shown in figure \@ref(fig:a-example-py), initially the sounds are above the rewarded region, therefore the animal must lick right in order to reach the rewarded region. (Henceforth, such stimuli are called ‘Rightwards!’ sounds.) As the animal employs the correct strategy and licks right, it reaches the rewarded region and is thus presented with a drop of water. As it keeps licking the right spout, the correct strategy changes to ‘Leftwards!’. The mouse switches its lick pattern and is therefore rewarded. Subsequently, the stimulus again changes to a ‘Rightwards!’ sound.
+
+```{python a-example-py, cache = TRUE, fig.cap = '(ref:a-example)'}
+ex_lick_bouts = tw.CenteredData(
+    tw.LickBout(windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'], days = ['2019-07-01'], blocks = ['C'],
+    sounds = True, center_columns = ['licks', 'rewards']
+)
+
+selection = tw.BusySelection(2, 40, 22)
+df_sample = selection.select(ex_lick_bouts.centered, old_mode = True)
+df_sample = df_sample[df_sample['scope'] == 'full']
+df_sample = df_sample[df_sample['bout_direction'] == 'R']
+df_sample = df_sample[df_sample['event_nr'] == '1']
+df_sample['fill_event'] = [
+    tw.CenteredData.label(drct, col, just_rewards = True) for drct, col in zip(
+        df_sample['direction'],
+        df_sample['center_column']
+    )
+]
+df_sample['time'] += 5
+mouse = 'gtmk444f'
+cont = {
+    'RL': {'L': -1, 'R': 1},
+    'LR': {'L': 1, 'R': -1}
+}
+df_sample['event_y'] = np.array([
+    cont[tw.SoundEvents.contingency(mouse)][
+        drct
+    ] if col == 'licks' else 0 for drct, col, mouse in zip(
+        df_sample['direction'],
+        df_sample['center_column'],
+        df_sample['mouse']
+    )
+])
+df_sounds = ex_lick_bouts.event.label(ex_lick_bouts.sounds)
+df_sounds = selection.reselect(df_sounds)
+df_sounds = df_sounds[df_sounds['scope'] == 'full']
+df_sounds = df_sounds[df_sounds['bout_direction'] == 'R']
+df_sounds = df_sounds[df_sounds['event_nr'] == '1']
+df_sounds['time'] += 5
+df_sounds['tile_time'] = df_sounds['time'] + 0.1
+df_sounds['filling'] = [
+    'Perturbation' if pert != 0 else 'Regular Sound' for pert in df_sounds['perturbation']
+]
+df_sounds['frequency'] = np.power(2, 3.5+df_sounds['centered_sound_id']/6)
+illu = (
+    gg.ggplot(df_sounds) + 
+    gg.annotate('rect', xmin = -np.inf, xmax = np.inf, ymin = -1, ymax = 1, fill = 'blue', alpha = 0.1) +
+    gg.annotate('rect', xmin = -np.inf, xmax = np.inf, ymin = 1, ymax = np.inf, fill = tw.CenteredData.colors["Right Lick"], alpha = 0.1) +
+    gg.annotate('rect', xmin = -np.inf, xmax = np.inf, ymin = -np.inf, ymax = -1, fill = tw.CenteredData.colors["Left Lick"], alpha = 0.1) +
+    gg.geom_step(gg.aes(x = 'time', y = 'centered_sound_id')) + 
+    gg.geom_tile(gg.aes(x = 'tile_time', y = 'centered_sound_id',
+                        height = 0.3, width = 0.2, fill = 'filling')) + 
+    gg.geom_tile(
+        gg.aes(x = 'time', y = 'event_y', fill = 'fill_event',
+               height = 0.3, width = 0.1),
+        df_sample
+    ) +
+    gg.xlim([df_sounds['time'].min(), df_sounds['time'].max()]) + 
+    gg.scale_fill_manual(values = tw.CenteredData.colors) + 
+    gg.theme_minimal() + 
+    gg.theme(legend_position = 'top', 
+             legend_title = gg.element_blank()) + 
+    gg.labs(x = 'Time (s)', y = 'Frequency (Hz)') + 
+    gg.scale_y_continuous(breaks = range(-6, 7, 2), limits = [-6.5, 6.5], labels = np.round(np.power(2,3.5+np.array(range(-6,7,2))/6))) + 
+    gg.annotate('label', x = 1, y = 4, label = "'Rightwards!'", va = 'bottom', size = 12) + 
+    gg.annotate('label', x = 1, y = -4, label = "'Leftwards!'", va = 'top', size = 12) + 
+    gg.annotate('label', x = 1, y = 0, label = "'Success!'", va = 'center', size = 12)
+)
+gg.ggsave(illu, filename = 'figs/a-example.pdf', width = 10, height = 8)
+gg.ggsave(illu, filename = 'figs/a-example.png', width = 10, height = 8)
+illu
+```
+
+(ref:a-example) An example sequence of M10 undergoing the behavioural task. The gray tiles visualize the unperturbed presented stimuli. The time of stimulus presentation is shown on the x axis and their frequency in kHz is shown on the y axis. Pink tiles illustrate a perturbed sound. Furthermore, green tiles indicate left licks, orange tiles indicate right licks. Blue tiles indicate rewards.
+
+Based on the above reasoning we can assess whether the animal’s behaviour is compatible with a sound-driven policy. In the example sequence, this is the case so far. However, it is not clear from this analysis alone that the changing sounds actually determine the lick strategy. Instead, the mouse might have learned a simple motor pattern of alternating between left and right lick bouts (henceforth called a switch policy). An animal simply switching between left and right licking independently of the sounds could nevertheless be regularly traversing the target region and therefore receive plenty of rewards.
+
+By introducing targeted violations of the sensorimotor contingency, it was possible to analyse whether a switch policy alone could account for the behaviour. In some cases, such a violation led to a ‘strategy perturbation’, as can be seen in figure \@ref(fig:a-example-py). By licking left, the animal had reached a ‘Rightwards!’ stimulus. Both a sound-driven and a motor-driven policy would suggest to lick right. However, due to a strategy perturbation, the stimulus suddenly jumps to a ‘Leftwards!’ sound, even though the normal sensorimotor contingency would have led to a ‘Rightwards!’ sound. The motor-driven policy would therefore erroneously suggest to switch and lick right, whereas a sound-driven policy would correctly suggest to not switch and continue to lick left. Strategy perturbations can therefore be used to distinguish between a switch policy and a sound-driven policy.
+
+Of course, a different motor-driven policy could cause the mouse to correctly react to strategy perturbations, namely by continuously licking on one side. However, this policy would fail to provide the mouse with any rewards when no perturbations occur. Only a sound-driven strategy can account for the correct lick pattern in both cases. By comparing the effect of violations that lead to a strategy perturbation to those that do not, it is therefore possible to assess whether the mice have learned the sensorimotor contingency.
+
+### Lickrates after a strategy change
+
+For the purpose of such a comparison, this section will analyze lickrates before and after sounds that imply a change in strategy, as well as before and after strategy perturbations, using M10 as an example. It is important to note that this mouse (like most others) was generally more likely to lick the left than the right spout.^[The consistent left bias might be explained by the position of the headbar and the cranial window that was also consistent across all animals. The added weight of these implants require compensatory mechanisms by the animals that might have induced the bias as a side effect.]
+
+As figure \@ref(fig:strategy-change) demonstrates in the case of mouse M10, a change in strategy is preceded by licking of the opposite spout, as this drives the sound into the corresponding region. Furthermore, it is followed by an increased lick rate in the direction that is suggested by the stimulus. This increase is pronounced for a ‘Leftwards!’ event and more attenuated -- but nonetheless present -- in the case of a ‘Rightwards!’ event. It begins about 500 ms before the sound that causes a strategy change and reaches its peak within 500 ms after that sound.
+
+```{python strategy-change, fig.cap = '(ref:strategy-change)', cache = TRUE}
+cd_strategy_change = tw.CenteredData(
+    tw.SoundEvents(groups = ['strategy'],
+                   filters = ['nosuccess', 'strategy_change', 'no_perturbation'],
+                   windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'],
+    center_columns = ['licks']
+)
+p = (
+    cd_strategy_change.vis_histogram(histogram = False) + 
+    gg.geom_rect(xmin = 0, xmax = 0.5, ymin = -np.inf, ymax = np.inf, mapping = gg.aes(fill = 'label'), data = pd.DataFrame({'label': ["'Lick Left!'", "'Lick Right!'"]}), show_legend = False, inherit_aes = False, alpha = 0.1) + 
+    gg.scale_fill_manual(values =  {"'Lick Left!'": tw.CenteredData.colors["Left Lick"], "'Lick Right!'": tw.CenteredData.colors["Right Lick"]}) +
+    gg.geom_vline(xintercept = 0, color = '#7f7f7f') + 
+    gg.facet_wrap('label', labeller = {"'Lick Left!'": "'Leftwards!'", "'Lick Right!'": "'Rightwards!'"}, ncol = 1) + 
+    gg.theme_minimal() + 
+    gg.xlab("Time (s)") + 
+    gg.theme(legend_position = 'top', legend_title = gg.element_blank(),
+             subplots_adjust = {'top': 0.85}) + 
+    gg.ylab('Lickrate (Hz)') + 
+    gg.annotate('label', x = 1, y = 7, label = "Strategy Change", ha = 'left', size = 10) + 
+    gg.annotate('segment', x = 0, y = 8, xend = 0.94, yend = 7)
+)
+p.save('figs/strategy-change.png')
+p
+```
+
+(ref:strategy-change) The lick rate before and after a sound that changes the appropriate strategy either to ‘Leftwards!’ (upper panel) or ‘Rightwards!’ (lower panel). Data has been averaged across all sessions by M10.
+
+The animal therefore reacted to a strategy change in the appropriate manner. This reaction was either sound-driven or due to a learned switch pattern. In particular, this animal often started an active phase (i. e. a phase with a high lick rate) with a right lick bout that was followed by a left lick bout. In order to investigate whether such a motor pattern can explain away the animal’s behaviour, figure \@ref(fig:a-lickrates) visualizes the average lick rates of M10 centered around violations of the contingency that either perturbed the current strategy (henceforth called ‘perturbation’ events, see figure \@ref(fig:a-example-py)) or did not perturb the current strategy (‘no perturbation’).
+
+```{python a-lickrates-py, cache = TRUE}
+cd_pert = tw.CenteredData(
+    tw.SoundEvents(groups = ['strategy', 'strategy_perturbation', 'true_strategy'],
+                   filters = ['nosuccess', 'change', 'perturbation'],
+                   windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'],
+    center_columns = ['licks']
+)
+cd_pert.centered.reset_index().to_feather('hist_new.feather')
+pert_df_hist = cd_pert.histogram(bins = 40)
+pert_df_hist['previous'] = np.array([
+    " ".join(label.split(" ")[:2]) for label in pert_df_hist['label']
+])
+pert_df_hist["perturbation"] = np.array([
+    " ".join(label.split(" ")[2:]) for label in pert_df_hist["label"]
+])
+pert_df_hist = pert_df_hist[pert_df_hist['previous'] != "'Success!' Perturbation"]
+pert_df_hist.reset_index(drop = True).to_feather('data/pert_df_hist.feather')
+rast_cd_pert = tw.CenteredData(
+    tw.SoundEvents(groups = ['strategy', 'strategy_perturbation', 'true_strategy'],
+                   filters = ['nosuccess', 'change', 'perturbation'],
+                   windows = tw.JanusWindows(past = -5, future = 5)),
+    mice = ['gtmk444f'],
+    center_columns = ['licks', 'rewards']
+)
+pert_centered = rast_cd_pert.centered
+pert_centered = rast_cd_pert.event.label(pert_centered)
+pert_centered['previous'] = np.array([
+    " ".join(label.split(" ")[:2]) for label in pert_centered['label']
+])
+pert_centered["perturbation"] = np.array([
+    " ".join(label.split(" ")[2:]).capitalize() for label in pert_centered["label"]
+])
+pert_centered = pert_centered[pert_centered['previous'] != "'Success!' Perturbation"]
+pert_raster = tw.BusySelection(20, seed = 213).select(pert_centered)
+pert_raster['fill_event'] = [
+    tw.CenteredData.label(drct, col, True) for drct, col in zip(
+        pert_raster['direction'],
+        pert_raster['center_column']
+    )
+]
+pert_raster['strategy'] = np.array(["'Lick Left!'" if strat == 'left' else "'Lick Right!'" for strat in pert_raster['strategy']])
+pert_raster = pert_raster[pert_raster['scope'] == 'full']
+pert_raster.reset_index(drop = True).to_feather('data/pert_raster.feather')
+df_comparison = cd_pert.centered[
+    (cd_pert.centered['time'] > -1) &
+    (cd_pert.centered['time'] < 1) &
+    (cd_pert.centered['scope'] != 'full')].groupby(
+    ['scope', 'event_nr', 'strategy', 'true_strategy',
+     'strategy_perturbation', 'direction'])[
+    'time'].count(
+    ).reset_index(
+    name = 'lickrate')
+df_comparison = cd_pert.event.label(df_comparison)
+n_event = cd_pert.centered[
+    cd_pert.centered['scope'] != 'full'
+][['label', 'event_nr']].drop_duplicates()
+rtrn = []
+for drct in ['L', 'R']:
+    for scope in ['past', 'future']:
+        tmp = copy.deepcopy(n_event)
+        tmp['direction'] = drct
+        tmp['scope'] = scope
+        rtrn.append(tmp)
+n_event = pd.concat(rtrn)
+df_comparison = n_event.merge(df_comparison,
+                             on = ['label', 'scope', 'direction', 'event_nr'],
+                             how = 'left')
+df_comparison['lickrate'][np.isnan(df_comparison['lickrate'])] = 0
+
+def funs(x):
+    boot = bs.bootstrap(np.array(x), stat_func = bs_stats.mean, alpha = 0.05)
+    boot = [boot.value, boot.lower_bound, boot.upper_bound]
+    return boot
+
+def ab_fun(df):
+    code = {'R': 'right', 'L': 'left'}
+    correct_lickrate = df['lickrate'][df['strategy'] == code[df['direction'].iloc[0]]]
+    wrong_lickrate = df['lickrate'][df['strategy'] != code[df['direction'].iloc[0]]]
+#    ab = bs.bootstrap_ab(np.array(correct_lickrate),
+#                         np.array(wrong_lickrate),
+#                         bs_stats.mean,
+#                         bs_compare.difference,
+#                         return_distribution = True)
+#    return sp.stats.percentileofscore(ab, 0, 'weak')
+    if df['scope'].iloc[0] == 'past':
+        alt = 'two-sided'
+    else:
+        alt = 'greater'
+    return sp.stats.mannwhitneyu(correct_lickrate, wrong_lickrate, 
+                                 alternative = alt).pvalue
+
+df_metric = df_comparison.groupby(['scope', 'strategy', 'true_strategy',
+                                       'strategy_perturbation', 'direction'])[
+    'lickrate'].aggregate(funs
+    ).reset_index()
+df_ab = df_comparison.groupby(['scope', 'true_strategy', 'direction']
+    ).apply(ab_fun
+    ).reset_index()
+df_metric = cd_pert.event.label(df_metric)
+df_metric['previous'] = np.array([
+    " ".join(label.split(" ")[:2]) for label in df_metric['label']
+])
+df_metric["perturbation"] = np.array([
+    " ".join(label.split(" ")[2:]) for label in df_metric["label"]
+])
+df_metric = df_metric[df_metric['previous'] != "'Success!' Perturbation"]
+df_metric['mean'] = np.array([
+    lickrate[0] for lickrate in df_metric['lickrate']
+])
+df_metric['mean_lower'] = np.array([
+    lickrate[1] for lickrate in df_metric['lickrate']
+])
+df_metric['mean_upper'] = np.array([
+    lickrate[2] for lickrate in df_metric['lickrate']
+])
+df_metric['time'] = np.array([0.5 if scope == 'future' else -0.5 for scope in df_metric['scope']])
+df_metric['colour_event'] = np.array([
+    'Left Lick' if drct == 'L' else 'Right Lick' for drct in df_metric[
+            'direction']])
+
+df_ab['previous'] = np.array([
+    "'Lick Left!'" if ts == 'left' else "'Lick Right!'" for ts in df_ab['true_strategy']
+])
+df_ab['colour_event'] = np.array([
+    "Left Lick" if drct == 'L' else "Right Lick" for drct in df_ab['direction']
+])
+df_ab['pvalue'] = df_ab[0]
+df_ab.drop(columns = [0], inplace = True)
+df_ab.to_feather('data/df_ab.feather')
+df_metric = df_metric.reset_index(drop = True).drop(columns = ['lickrate'])
+df_metric.to_feather('data/df_metric.feather')
+```
+
+```{r a-lickrates, fig.cap = '(ref:a-lickrates)', out.width = '100%', cache = TRUE}
+df_raster <- feather::read_feather('data/pert_raster.feather')
+raster <- ggplot(df_raster, aes(x = time, y = event_nr)) + 
+    geom_rect(xmin = 0, xmax = 0.5, ymin = -Inf, ymax = Inf, inherit.aes = FALSE, show.legend = FALSE, mapping = aes(fill = strategy), data = df_raster %>% select(strategy, perturbation, true_strategy) %>% unique(), alpha = 0.1) + 
+    geom_vline(xintercept = 0, colour = 'grey50') +
+    geom_tile(aes(height = 0.5, width = 0.02, 
+                        fill = fill_event)) + 
+    facet_grid(perturbation ~ true_strategy, switch = 'y', 
+               labeller = labeller(true_strategy = c(left = "'Leftwards!'", right = "'Rightwards!'"))) + 
+    labs(x = NULL, y = NULL, fill = NULL) + 
+    scale_x_continuous(labels = NULL) + 
+    scale_y_discrete(breaks = NULL) + 
+    scale_fill_manual(values = c(`Left Lick` = '#1b9e77', 
+                                 `Right Lick` = '#d95f02',
+                                 Reward = 'blue', 
+                                 `'Lick Left!'` = '#1b9e77',
+                                 `'Lick Right!'` = '#d95f02'),
+                      breaks = c("Left Lick", "Right Lick", "Reward")) + 
+    theme_minimal() +
+    theme(legend.title = element_blank(), plot.margin = unit(c(0, 0, 0, 0), "cm"))
+df_hist <- feather::read_feather('data/pert_df_hist.feather')
+hist_new <- feather::read_feather('data/hist_new.feather') %>% 
+    filter(true_strategy != 'success')
+df_hist <- hist_new %>% 
+    mutate(time = round(time*4)/4 + 1/8) %>% 
+    group_by(label, direction, time, strategy_perturbation, true_strategy, event_nr) %>% 
+    summarize(rate = n()*4)
+expand <- 
+    expand.grid(event_nr = unique(df_hist$event_nr),
+                direction = unique(df_hist$direction),
+                time = unique(df_hist$time)) %>% 
+    as_tibble() %>% 
+    left_join(
+        df_hist %>% ungroup() %>%  select(event_nr, strategy_perturbation, true_strategy) %>% unique(),
+        by = c('event_nr')
+    )
+df_hist <- 
+    df_hist %>% 
+    ungroup() %>%
+    full_join(expand, by = c('event_nr', 'direction', 'time', 'strategy_perturbation', 'true_strategy')) %>% 
+    mutate(rate = if_else(is.na(rate), 0, rate),
+           colour_event = if_else(direction == 'L', 'Left Lick', 'Right Lick'),
+           perturbation = if_else(strategy_perturbation == 'Yes', 'Perturbation', 'No perturbation'),
+           previous = if_else(true_strategy == 'left', "'Leftwards!'", "'Rightwards!'"))
+ymin <- min(df_hist['rate'])
+ymax <- max(df_hist['rate'])
+hist <- df_hist %>% 
+    group_by(colour_event, perturbation, time, previous) %>% 
+    summarise(rate = mean(rate)) %>% 
+    ggplot(aes(x = time, y = rate,
+                                   colour = colour_event,
+                                   linetype = perturbation)) + 
+    geom_vline(xintercept = 0, colour = 'grey50') +
+    geom_line() + 
+    facet_wrap('previous', labeller = function(x) '', nrow = 1) +
+    labs(x = 'Time (s)', y = 'Lickrate (Hz)') + 
+    scale_colour_manual(values = c(`Left Lick` = '#1b9e77', 
+                                     `Right Lick` = '#d95f02')) + 
+    theme_minimal() + 
+    theme(legend.title = element_blank(), plot.margin = unit(c(-0.3, 0, 0, 0), "cm")) + 
+    annotate('label', x = 1, y = 3.75, label = "Stimulus Onset", hjust = 'left', size = 2.6) + 
+    annotate('segment', x = 0, y = 4, xend = 0.97, yend = 3.75)
+raster / hist + plot_layout(guides = 'keep', heights = c(3, 2)) + ggsave('figs/a-lickrates.png')
+```
+
+(ref:a-lickrates) The top panel depicts, in a raster plot, example events centered around perturbed and unperturbed events. The bottom panel shows the lickrate histogram centered around these events for M10. The x axis shows the time centered around stimulus onset and the y axis shows the lickrate. On the left side, events where the sensorimotor contingency led to a ‘Leftwards!’ sound are depicted. In the no-perturbation case, the new sound still suggested a left lick bout. In the case of a perturbation event, the new sound suggested to lick right. On the right side, events where the sensorimotor contingency led to a ‘Rightwards!’ sound are depicted. Similarly, the no-perturbation case does not change this strategy, whereas the perturbation case does.
+
+These violations only occurred during periods when the animals were actively engaged in the task, i.e. when the lick rate was non-zero in the immediate past, but were otherwise random. Restricting the analysis to those stimuli that represented a violation of the contingency therefore made the history between perturbation events and no-perturbation events comparable. As expected, the lick rates preceding stimulus onset were similar for both types. The only notable difference is given by an elevated right lick rate in the event of a ‘Leftwards!’ strategy without perturbation.
+
+The behavioural pattern following a no-perturbation event was consistent with the pattern following a strategy change within the sensorimotor contingency. In contrast, a perturbation of the strategy led to an immediate change of the left lickrate into the appropriate direction. If a ‘Leftwards!’ sound changed to a ‘Rightwards!’ sound, the left lick rate that had already started ramping up instantly decreased again. In the case of the reverse change, the left lick rate interrupted its quick decrease and instead increased again. Though less severely, the right lick rate changed in the appropriate manner, as well. The strategy perturbation therefore broke the regular switch pattern.
+
+This response was not driven by random fluctuations. This could be confirmed by using a nonparametric test to compare the lick rates in the second before and after stimulus onset and comparing them between events that led to a strategy change and those that did not (see figure \@ref(fig:a-significance)).In three out of four types of events, the licking behaviour of M10 before stimulus onset showed no significant differences between perturbation and no-perturbation events ($U=(8380, 95448, 105208)$, $p = (0.74, 0.20, 0.11)$). However, for a ‘Leftwards!’ strategy, right lick rates were significantly elevated in the event of perturbations compared to no perturbations ($U=6418$, $p=0.0025$).
+
+```{r a-significance, fig.cap = '(ref:a-significance)'}
+cd_pert <- feather::read_feather('general_hist.feather')
+df_ab <- feather::read_feather('data/df_ab.feather')
+df_metric <- feather::read_feather('data/df_metric.feather')
+df_metric <- hist_new %>% 
+    filter(time > -1 & time < 1) %>% 
+    mutate(scope = if_else(time<0, 'past','future'))
+df_metric <- df_hist %>% 
+    filter(time > -1 & time < 1) %>% 
+    mutate(scope = if_else(time < 0, 'past','future')) %>% 
+    mutate(long_direction = if_else(direction == 'L', 'left', 'right'), 
+           correct = case_when(
+                true_strategy == long_direction & 
+                    strategy_perturbation == 'No' ~ 'Yes',
+                true_strategy == long_direction & 
+                    strategy_perturbation == 'Yes' ~ 'No',
+                true_strategy != long_direction & 
+                    strategy_perturbation == 'Yes' ~ 'Yes',
+                true_strategy != long_direction & 
+                    strategy_perturbation == 'No' ~ 'No'
+            )) %>% 
+    group_by(scope, true_strategy, direction, correct, event_nr, strategy_perturbation) %>% 
+    summarise(rate = mean(rate))
+df_ab <- 
+    df_metric %>% 
+    group_by(scope, true_strategy, direction) %>% 
+    summarise(pvalue = wilcox.test(x = rate[correct == 'Yes'],
+                                   y = rate[correct == 'No'], alternative = if_else(unique(scope) == 'past', 'two.sided', 'greater'))$p.value,
+              U = wilcox.test(x = rate[correct == 'Yes'],
+                                   y = rate[correct == 'No'], alternative = if_else(unique(scope) == 'past', 'two.sided', 'greater'))$statistic) %>% 
+    mutate(previous = if_else(true_strategy == 'left', "'Leftwards!'", "'Rightwards!'"))
+    
+df_metric <- 
+    df_metric %>% 
+    mutate(
+        xmin = 0.62 + 0.5*(direction == 'R') + (scope == 'future') + 0.25 * (strategy_perturbation == 'Yes'),
+        group = paste(direction, scope, true_strategy, strategy_perturbation),
+        perturbation = if_else(strategy_perturbation == 'Yes', 'Perturbation', 'No perturbation'),
+        colour_event = if_else(direction == 'L', 'Left Lick', 'Right Lick'),
+        previous = if_else(true_strategy == 'left', "'Leftwards!'", "'Rightwards!'")
+    )
+df_ab <- 
+    df_ab %>% 
+    filter(true_strategy != 'success') %>%
+    mutate(
+        annotation = case_when(
+            pvalue < 1e-4 ~ 'p<0.0001',
+            pvalue < 1e-3 ~ 'p<0.001',
+            pvalue < 1e-2 ~ 'p<0.01',
+            TRUE ~ paste0('p=', round(pvalue, 2))
+        ),
+        xmin = 0.62 + 0.5*(direction == 'R') + (scope == 'future') + 0.125,
+        group = paste(direction, scope, previous)
+    )
+p_values <- 
+    ggplot(df_metric, aes(x = forcats::fct_rev(scope), y = rate, color = colour_event,
+                             linetype = perturbation, shape = perturbation)) + 
+    facet_wrap(~ previous, ncol = 2) + 
+    stat_summary(geom = 'pointrange', fun.data = 'mean_cl_boot', position = position_dodge(width = 1)) + 
+    geom_vline(xintercept = 1.5, color = 'grey50') +
+    scale_x_discrete(breaks = NULL) + 
+    scale_shape_manual(values = c(`Perturbation` = 1, `No perturbation` = 19)) +
+    scale_colour_manual(values = c(`Left Lick` = '#1b9e77', 
+                                     `Right Lick` = '#d95f02')) + 
+    theme_minimal() + 
+    labs(x = NULL, y = 'Average Lickrate (Hz)') +
+    ylim(0, NA) +
+    theme(legend.title = element_blank(),
+          legend.position = 'top') + 
+    geom_segment(aes(x = xmin, xend = xmin, y = 4.3, yend = 4.5,
+                     color = NULL, linetype = NULL, shape = NULL, group = group),
+                 show.legend = FALSE) + 
+    geom_segment(aes(x = xmin, xend = xmin + 0.25, y = 4.5, yend = 4.5), 
+                 inherit.aes = FALSE,
+                 data = df_metric %>% 
+                     filter(strategy_perturbation == 'No')) + 
+    geom_text(aes(x = xmin, y = 4.6, label = annotation), inherit.aes = FALSE,
+              data = df_ab,
+              vjust = 'bottom', hjust = 'middle') + 
+    annotate('label', x = 1.6, y = 5.25, label = "Stimulus Onset", hjust = 'left', size = 2.6) + 
+    annotate('segment', x = 1.5, y = 5, xend = 1.6, yend = 5.25)
+p_values + ggsave('figs/significance.png')
+```
+
+(ref:a-significance) The differences in lickrates as a result of perturbation and no-perturbation events and the significance of their difference according to a Mann-Whitney U test.
+
+In contrast, after a strategy perturbation, the lickrates into the direction of the perturbation significantly increased when compared to their level during a non-perturbed event in which licks into this direction were not necessary ($U=(9230,111039)$, $p=(0.032, 0.0025)$). The lickrates into the previous direction decreased in the event of a perturbation, but those changes were not significant ($U=(8814, 102516)$, $p=(0.15, 0.21)$).
+
+These results demonstrate that lick strategies cannot be fully explained by a motor-driven policy, and are at least partly explained by a sound-driven policy. Therefore, we can conclude that M10 has acquired the sensorimotor contingency.
+
+This analysis can be further summarized by determining and comparing the change in lick rate difference elicited by the different types of events. This change is defined as the difference between the right and left lick rate in the second after stimulus onset compared to the lick rate difference in the second before stimulus onset. A positive (resp. negative) change in lick rate difference therefore suggests that the proportion of right (resp. left) licks was higher following stimulus onset. Compared to regular sounds, strategy perturbations shifted this change in lick rate difference significantly into the correct direction in mouse M10 ($\chi^2=13.5$, $p=0.00012$). 
+
+### Group analysis of behavioural learning
+
+The Prentice-Wittkowski test comparing changes in lickrate difference allowed for a compact assessment whether a mouse had learned the task using a sound-driven policy and indicated that five out of nine mice had learned to employ such a policy and therefore had acquired the contingency (see \@ref(tab:significance)). The average reactions to a strategy perturbation can be found in the appendix.
+
+```{r significance, results = 'markup'}
+testing <- cd_pert %>% 
+    filter(time > -1 & time < 1) %>% 
+    filter(mouse != 'gtmk443f', mouse != 'gtmk443b') %>% 
+    group_by(true_strategy, strategy_perturbation, strategy, direction, event_nr, scope) %>% 
+    summarise(rate = n()) %>% 
+    filter(scope != 'full') %>% 
+    spread(key = 'scope', value = 'rate', fill = 0) %>% 
+    mutate(change = future-past) %>% 
+    spread(key = 'direction', value = 'change', fill = 0) %>% 
+    mutate(change = if_else(true_strategy == 'right', L-R, R-L)) %>%
+    mutate(mouse = str_split_fixed(event_nr, "_", 4)[,1],
+           day = str_split_fixed(event_nr, "_", 4)[,2]) %>% 
+    mutate(blocks = paste(mouse, day, true_strategy))
+test <- prentice.test(testing[['change']], testing[['strategy_perturbation']], testing[['blocks']], alternative = 'greater')
+test_per_mice <- testing %>% 
+    group_by(mouse) %>% 
+    summarise(p_value = prentice.test(change, strategy_perturbation, blocks, alternative = 'greater')$p.value, 
+              chi = prentice.test(change, strategy_perturbation, blocks, alternative = 'greater')$statistic)
+test_course <- testing %>% 
+    filter(mouse == 'gtmk444f') %>% 
+    mutate(day_nr = ymd(day) - ymd('2019-06-29')) %>% 
+    filter(day_nr <= 7 | day_nr >= 14) %>% 
+    mutate(group = (day_nr <= 7)) %>% 
+    group_by(group) %>% 
+    summarise(p_value = prentice.test(change, strategy_perturbation, blocks, alternative = 'greater')$p.value, 
+              chi = prentice.test(change, strategy_perturbation, blocks, alternative = 'greater')$statistic)
+test_per_mice %>% 
+    mutate(
+        Mouse = case_when(
+            mouse == 'gtmk443a' ~ 'M01',
+            mouse == 'gtmk443c' ~ 'M03',
+            mouse == 'gtmk443e' ~ 'M04',
+            mouse == 'gtmk443g' ~ 'M06',
+            mouse == 'gtmk443h' ~ 'M07',
+            mouse == 'gtmk444d' ~ 'M08',
+            mouse == 'gtmk444e' ~ 'M09',
+            mouse == 'gtmk444f' ~ 'M10',
+            mouse == 'gtmk444g' ~ 'M11'
+        )
+    ) %>% 
+    mutate(p_value = signif(p_value, 2), chi = signif(chi, 2)) %>% 
+    select(Mouse, `Test Statistic` = chi, `p-value` = p_value) %>% 
+    knitr::kable(caption = "(ref:tab-significant)", booktabs = TRUE)
+```
+(ref:tab-significant) Table summarizing the results of the Prentice-Wittkowski test for each mouse, specifying the result in terms of the test statistic $\chi^2$ and the p-value.
+
+### Course of learning
+
+In mouse M10, which performed this task for twenty days, this sound-driven policy emerges over the course of training. By splitting its sessions up into the first (days one to seven) and last (days fourteen to twenty) third, it is possible to study the evolution of the sound-driven policy (figure \@ref(fig:course)).
+
+
+```{r course, fig.cap = "(ref:course)"}
+df_metric <- 
+    df_metric %>% 
+    mutate(day = as.double(ymd(str_split_fixed(event_nr, "_", 4)[2])-ymd('2019-06-30')))
+df_metric_learning <- 
+    df_metric %>%
+    filter(day <= 6 | day >= 13) %>% 
+    mutate(session = factor(if_else(day <= 6, 'Days one to seven', 'Days fourteen to twenty'), levels = c('Days one to seven', 'Days fourteen to twenty')))
+df_ab_learning <- 
+    df_metric_learning %>% 
+    group_by(scope, true_strategy, direction, session) %>% 
+    summarise(pvalue = wilcox.test(x = rate[correct == 'Yes'],
+                                   y = rate[correct == 'No'], alternative = if_else(unique(scope) == 'past', 'two.sided', 'greater'))$p.value,
+              U = wilcox.test(x = rate[correct == 'Yes'],
+                                   y = rate[correct == 'No'], alternative = if_else(unique(scope) == 'past', 'two.sided', 'greater'))$statistic) %>% 
+    mutate(previous = if_else(true_strategy == 'left', "'Leftwards!'", "'Rightwards!'"))
+df_metric_learning <- 
+    df_metric_learning %>% 
+    mutate(
+        xmin = 0.62 + 0.5*(direction == 'R') + (scope == 'future') + 0.25 * (strategy_perturbation == 'Yes'),
+        group = paste(direction, scope, true_strategy, strategy_perturbation),
+        perturbation = if_else(strategy_perturbation == 'Yes', 'Perturbation', 'No perturbation'),
+        colour_event = if_else(direction == 'L', 'Left Lick', 'Right Lick'),
+        previous = if_else(true_strategy == 'left', "'Leftwards!'", "'Rightwards!'")
+    )
+df_ab_learning <- 
+    df_ab_learning %>% 
+    filter(true_strategy != 'success') %>%
+    mutate(
+        annotation = case_when(
+            pvalue < 1e-4 ~ 'p<0.0001',
+            pvalue < 1e-3 ~ 'p<0.001',
+            pvalue < 1e-2 ~ 'p<0.01',
+            TRUE ~ paste0('p=', round(pvalue, 2))
+        ),
+        xmin = 0.62 + 0.5*(direction == 'R') + (scope == 'future') + 0.125,
+        group = paste(direction, scope, previous)
+    )
+p_values <- 
+    ggplot(df_metric_learning, aes(x = forcats::fct_rev(scope), y = rate, color = colour_event,
+                             linetype = perturbation, shape = perturbation)) + 
+    facet_grid(session ~ previous) + 
+    stat_summary(geom = 'pointrange', fun.data = 'mean_cl_boot', position = position_dodge(width = 1)) + 
+    geom_vline(xintercept = 1.5, color = 'grey50') +
+    scale_x_discrete(breaks = NULL) + 
+    scale_shape_manual(values = c(`Perturbation` = 1, `No perturbation` = 19)) +
+    scale_colour_manual(values = c(`Left Lick` = '#1b9e77', 
+                                     `Right Lick` = '#d95f02')) + 
+    theme_minimal() + 
+    labs(x = NULL, y = 'Average Lickrate (Hz)') +
+    ylim(0, 5) +
+    theme(legend.title = element_blank(),
+          legend.position = 'top') + 
+    geom_segment(aes(x = xmin, xend = xmin, y = 4.3, yend = 4.5,
+                     color = NULL, linetype = NULL, shape = NULL, group = group),
+                 show.legend = FALSE) + 
+    geom_segment(aes(x = xmin, xend = xmin + 0.25, y = 4.5, yend = 4.5), 
+                 inherit.aes = FALSE,
+                 data = df_metric %>% 
+                     filter(strategy_perturbation == 'No')) + 
+    geom_text(aes(x = xmin, y = 4.6, label = annotation), inherit.aes = FALSE,
+              data = df_ab_learning,
+              vjust = 'bottom', hjust = 'middle')
+p_values + ggsave('figs/learning_course.png')
+```
+(ref:course) The top panels illustrate the differences in lickrates of M10 as a result of perturbation and no-perturbation events and the significance of their difference across the first seven days. The bottom panels illustrate that difference at the end of the behavioural training. The lineranges reflect 95% confidence intervals.
+
+The most important response to strategy perturbations, the increase of the lickrate in the appropriate direction, is not significant in the first seven days ($U=(1141,8050)$, $p=(0.51, 0.91)$), but is in the last seven ($U=(764,11090)$, $p=(0.03,0.05)$). In contrast, the left lickrate is already significantly attenuated in the appropriate event within the first seven days ($U=1450$,$p=0.0080$).^[It is important to note here that the first seven days contain few perturbations. This might be an explanation for the discrepancy between the overlapping confidence intervals and the significant Mann-Whitney U test, which evaluates a rank sum rather than a difference of means.] In the last seven days, neither the right nor the left lickrate are significantly attenuated for perturbations that suggest a strategy in the opposite direction ($U=(544,9512)$, $p=(0.80,0.83)$). Overall, however, the behaviour of M10 can be better explained by a sound-driven policy for the last seven days compared to the first seven days, indicating an improvement in performance over time. This is supported by a Prentice-Wittkowski test applied to the first and the last seven days. While this test is significant in both cases, the test statistic is higher and the p value smaller at the end of the behavioural training (Days one to seven: $\chi^2=3.17$, $p=0.038$; Days fourteen to twenty: $\chi=20.8$, $p=2.6e-6$).
+
+By assessing the change in lick rate difference that the four different kinds of strategy perturbations evoke on a daily basis, the emergence of the sensorimotor behaviour over time can be studied in a more detailed manner (figure \@ref(fig:lrd)). If the animal behaves in a sensible manner, this change in lick rate difference should be positive (resp. negative) if the sound suggests a ‘Rightwards!’ (resp. ‘Leftwards!’) strategy. Within the first couple of days, the change in lick rate difference in response to no-perturbation ‘Leftwards!’ events quickly reached a strong negative value. Compared to that the change in lick rate difference in response to no-perturbation ‘Rightwards!’ events rose more slowly. In a perturbed 'Leftwards!' event suggesting a right lick bout, the initial response appeared similar to a non-perturbed ‘Leftwards!’ event. Over time, however, compared to the regular reaction, this change in lick rate difference shifted towards a higher proportion of right licks. A similar, but more subtle pattern emerges from the perturbed 'Rightwards!' events, as well.
+
+
+```{r lrd, fig.cap = '(ref:lrd)'}
+set.seed(529)
+df_course <- 
+    df_metric %>% 
+    mutate(day = ymd(str_split_fixed(event_nr, "_", 4)[,2])) %>% 
+    mutate(day_nr = day-ymd("2019-06-30"))
+df_ratio <- 
+    df_course %>% 
+    ungroup() %>% 
+    select(day_nr, rate, direction, scope, event_nr, perturbation, previous, true_strategy) %>% 
+    spread(key = 'direction', value = 'rate', fill = 0) %>% 
+    mutate(difference = R-L) %>% 
+    spread(key = 'scope', value = 'difference', fill = 0) %>% 
+    mutate(change = future-past) %>%
+    mutate(dummy_perturbation = if_else(perturbation == "Perturbation", 1, 0),
+           day_nr = as.double(day_nr))
+# course_left <- lm(change~dummy_perturbation:exp(-0.1*day_nr)+dummy_perturbation+exp(-day_nr), data = df_ratio %>% filter(true_strategy == 'left'))
+# course_nls_left <- nls(formula = change~a*exp(-tau*day_nr)+b+c*exp(-tau_c*day_nr)*dummy_perturbation, start = list(tau = 1,a = 12.43, b=-2.9, c = 0.06, tau_c = 0.1), data = df_ratio %>% filter(true_strategy == 'left'), control = nls.control(minFactor = 1/100000, maxiter = 500))
+# course_nls_left_2 <- nls(formula = change ~a*exp(-tau*day_nr)+b+c*exp(-tau_c*day_nr)*dummy_perturbation+d*dummy_perturbation, start = list(tau = 0.3,a = 4.1, b=-3.2, c = 0.3, tau_c = -0.1, d=0.05), data = df_ratio %>% filter(true_strategy == 'left'), control = nls.control(minFactor = 1/100000, maxiter = 500))
+# course_right <- lm(change~dummy_perturbation:exp(-0.05*day_nr)+exp(-day_nr)+dummy_perturbation, data = df_ratio %>% filter(true_strategy == 'right'))
+# course_nls_right <- nls(formula = change~a*exp(-tau*day_nr)*(1-dummy_perturbation)+b+c*exp(-tau_c*day_nr)*dummy_perturbation, start = list(tau = 1,a = 0.7, b=0.6, c = 0.05, tau_c = 0.05), data = df_ratio %>% filter(true_strategy == 'right'), control = nls.control(minFactor = 1/10000))
+# course_nls_right_2 <- nls(formula = change ~a*exp(-tau*day_nr)+b+c*exp(-tau_c*day_nr)*dummy_perturbation+d*dummy_perturbation, start = list(tau = -0.24,a = 0.005, b=0.57, c = -0.3, tau_c = -0.005, d=-0.1), data = df_ratio %>% filter(true_strategy == 'right'), control = nls.control(minFactor = 1/100000, maxiter = 500))
+# df_fit <- bind_rows(broom::augment(course_nls_left_2, data = df_ratio %>% filter(true_strategy == 'left')), broom::augment(course_nls_right_2, data = df_ratio %>% filter(true_strategy == 'right')))
+df_ratio %>% 
+    ggplot(aes(x = day_nr+1, y = change, linetype = perturbation)) + 
+    annotate('rect', xmin = -Inf, xmax = Inf, ymin = 0, ymax = Inf, fill = "#d95f02", alpha = .2) + 
+    annotate('rect', xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = 0, fill = "#1b9e77", alpha = .2) +
+    stat_summary(fun.data = 'mean_cl_boot') + 
+    facet_grid(perturbation ~ previous) + 
+    #geom_line(stat = 'identity', aes(y = .fitted), color = 'blue', data = df_fit) + 
+    theme_minimal() + 
+    theme(legend.position = 'none') + 
+    labs(linetype = NULL, x = 'Day', y = 'Change in Lickrate Difference') + 
+    geom_label(aes(x = x, y = y, label = label), data = tibble(x = c(10, 10), 
+                                                               y = c(4, -4),
+                                                               label = c("Event leads to more right licks",
+                                                                         "Event leads to more left licks"),
+                                                               previous = c("'Rightwards!'"),
+                                                               perturbation = "No perturbation")) + 
+    ggsave('figs/exp_learning.png')
+# df_one_function <- 
+#     expand.grid(day_nr = unique(df_ratio$day_nr), 
+#                 dummy_perturbation = unique(df_ratio$dummy_perturbation),
+#                 true_strategy = unique(df_ratio$true_strategy)) %>% 
+#     as_tibble()
+# df_one_function <- bind_rows(broom::augment(course_nls_left_2, newdata = df_one_function %>% filter(true_strategy == 'left')), broom::augment(course_nls_right_2, newdata = df_one_function %>% filter(true_strategy == 'right'))) %>% 
+#     mutate(cs = case_when(
+#         true_strategy == 'left' & dummy_perturbation == 1 ~ 'right_pert',
+#         true_strategy == 'right' & dummy_perturbation == 0 ~ 'right',
+#         true_strategy == 'left' & dummy_perturbation == 0 ~ 'left',
+#         TRUE ~ 'left_pert'
+#     )) %>% 
+#     select(day_nr, cs, .fitted) %>% 
+#     spread(key = 'cs', value = ".fitted") %>% 
+#     mutate(performance = right + right_pert - left - left_pert)
+# df_one_function %>% 
+#     ggplot(aes(x = day_nr, y = performance)) + 
+#     geom_line() + 
+#     theme_bw()
+```
+(ref:lrd) The evolution of the change in lick rate difference over training time.
+
+## Representation
+
+This section discusses the evidence that auditory cortex represents the sensorimotor contingency. For the purpose of this analysis, this is assumed to be the case if violating the sensorimotor contingency changes the representation of the presented stimulus. In the previous section, the contingency was violated with jumps large enough to induce a strategy change. Auditory cortex represents such sensory oddballs regardless of their relation to the contingency [@rubin2016representation]. This analysis therefore required more subtle sensorimotor violations. To distinguish sensory oddball responses from sensorimotor perturbation responses, events were selected that were matched in terms of sensory statistics, but differed from regular sounds in as far as they violated the sensorimotor contingency. Sensory statistics were assumed similar if the previously and currently presented stimuli were equal across both conditions.
+
+If auditory cortex is sensitive to such subtle perturbations, this would therefore suggest that the area takes motor evidence into account in a contingency-specific manner. By recording single-neuron responses in auditory cortex while the mouse was engaged in the task and occasionally presented with perturbations, it was determined whether auditory cortex was sensitive to violations of the sensorimotor contingency.
+
+
+### Frequency tuned neurons in auditory cortex
+
+As a first step, neurons were identified that were sensitive to the presented tones. In primary (A1) and secondary (A2) auditory cortex as well as the anterior auditory field (AAF), neurons are globally organized in a topographical manner according to their best frequency, i. e. the sound frequency they respond to most strongly [@stiebler1997topographic; @bizley2005functional; @issa2014topographic]. Using widefield imaging, the location of the cranial window over auditory cortex was confirmed and the locations of A1, A2, and AAF were determined (figure \@ref(fig:frequency-tuning)a). While the mice performed the behavioural task, we recorded the activity from individual neurons in layer 2/3 (170-250µm depth) of  these regions using 2-photon calcium imaging and determined the deconvolved spike rate using the ‘suite2p’ algorithm [@pachitariu2017suite2p]. This section analyses an example session in L2/3 (-205µm) of putative A1 in mouse M10.
+
+After determining the average spike rate in response to a presented stimulus, neuronal frequency tuning was determined using the Kruskal-Wallis statistic, a nonparametric version of the analysis of variance [@kruskal1952]. The neurons with the strongest frequency tuning ($p<0.0001$) were selected for further analysis. Most of the selected neurons showed typical frequency tuning curves (figure \@ref(fig:frequency-tuning)b,c) and a typical average response to sound presentation (figure \@ref(fig:frequency-tuning)d), with a mixture of onset and offset responses [@qin2007offset; @liu2019offset].
+
+```{python frequency-tuning-py, eval = FALSE}
+nd_f_10 = tw.CenteredNeuralData(
+    event = tw.SoundEvents(
+        groups = ['centered_id', 'perturbation', 'change'],
+        filters = ['change'],
+        windows = tw.JanusWindows(-1,1,reference='frame')
+    ),
+    mouse = 'gtmk444f',
+    area = 'area04',
+    day = '2019-07-05'
+)
+df_centered = nd_f_10.centered[nd_f_10.centered['scope'] == 'future']
+metric = tw.Spikerate(
+    kernel = tw.Kernel(
+        function = lambda x: float(x<=7)
+    )
+)
+df_response = metric.compute(nd_f_10)
+df_tuning = df_response.groupby(
+    ['neuron_id', 'centered_id']
+)[['spikerate']].mean().reset_index()
+def anova(df):
+    samples = [it_df['spikerate'] for id, it_df in df.groupby(['centered_id'])]
+    return stats.kruskal(*samples)
+df_anova = df_response.groupby(['neuron_id']).apply(anova).reset_index(name = 'kruskal')
+df_anova['pvalue'] = [stat.pvalue for stat in df_anova['kruskal']]
+df_anova['statistic'] = [stat.statistic for stat in df_anova['kruskal']]
+df_kruskal = df_tuning.merge(df_anova, on = 'neuron_id')
+sharpest_neurons = df_anova.sort_values(['pvalue'])['neuron_id'].iloc[1:50].tolist()
+df_best_tuning = df_tuning[[neuron_id in sharpest_neurons for neuron_id in df_tuning['neuron_id']]]
+df_best_tuning.to_feather('data/df_best_tuning.feather')
+best_response = df_best_tuning.groupby(
+    ['neuron_id']).apply(
+    lambda df: df.loc[df['spikerate'].idxmax()]).reset_index(
+    drop=True)
+df_best_response = best_response[['neuron_id', 'centered_id']].merge(
+    nd_f_10.centered, on = ['neuron_id', 'centered_id'])
+df_trace = df_best_response.groupby(
+    ['neuron_id', 'centered_id', 'frame']
+)['spikes'].mean(
+).reset_index(name = 'spikes')
+df_trace.to_feather('data/df_trace.feather')
+df_stats = tw.read_stat('gtmk444f', 'area04', '2019-07-05')
+df_tuning_field = best_response.merge(df_stats, on = 'neuron_id')
+df_tuning_field.to_feather('data/df_tuning_field.feather')
+```
+
+
+```{r frequency-tuning, fig.cap = "(ref:frequency-tuning)", out.width = '95%', cache = TRUE}
+freq_trans <- function(x) 2^(3.5+x/6)
+df_tuning_field <- feather::read_feather('data/df_tuning_field.feather')
+map <- 
+    df_tuning_field %>% 
+    mutate(y = -y) %>%
+    mutate(frequency = freq_trans(centered_id)) %>% 
+    ggplot(aes(x = x, y = y, color = frequency)) + 
+    geom_point(size = 5) + 
+    theme_void() + 
+    coord_flip() + 
+    labs(color = 'Frequency (kHz)') +
+    scale_color_viridis_c(trans = scales::log10_trans(), limits = c(4, 50)) + 
+    theme(plot.background = element_rect(fill = 'transparent'), panel.background = element_rect(color = 'black', fill = 'transparent'), legend.text = element_text(size = 20), legend.title = element_text(size = 20), legend.position = 'none', legend.key.size = unit(0.5, 'in')) + 
+    ggsave('figs/map.png')
+df_best_response <- feather::read_feather('data/df_best_response.feather')
+df_change <- feather::read_feather('data/df_change.feather')
+df_normalization <- 
+    df_change %>% 
+    filter(norm_id == 0) %>% 
+    group_by(neuron_id) %>% 
+    summarise(normalization = mean(spikerate))
+df_change <- 
+    df_change %>% 
+    left_join(df_normalization, by = 'neuron_id') %>% 
+    mutate(normalized_spikerate = spikerate/normalization)
+best_50 <- df_best_response %>% 
+    filter(best_50) %>% 
+    extract2("neuron_id") %>% 
+    unique()
+tuning_curves <- 
+    df_change %>% 
+    filter(neuron_id %in% best_50) %>%
+    mutate(frequency = freq_trans(centered_id)) %>% 
+    ggplot(aes(x = frequency, y = spikerate)) + 
+    facet_wrap(~neuron_id, scales = 'free_y') + 
+    stat_summary(geom = 'linerange', fun.data = 'mean_cl_boot') + 
+    stat_summary(geom = 'line', fun.y = 'mean') + 
+    theme_bw() + 
+    theme(strip.text.x = element_blank(),
+          axis.text.x = element_text(),
+          axis.title = element_text()) + 
+    scale_x_log10(breaks = c(7, 20)) + 
+    scale_y_continuous(breaks = NULL) +
+    xlab('Frequency (kHz)') + 
+    ylab('Average spikerate after stimulus onset')
+df_trace <- feather::read_feather('data/df_trace.feather')
+trace <- 
+    df_trace %>% 
+    mutate(time = frame/29.7*1000) %>% 
+    filter(time < 400, time > -150) %>%
+    ggplot(aes(x = time, y = spikes)) + 
+    annotate('rect', xmin = 0, xmax = 200, ymin = -Inf, ymax = Inf, alpha = 0.5) + 
+    stat_summary(geom = 'line', fun.y = 'mean') + 
+    theme_bw() + 
+    facet_wrap(~neuron_id, scales = 'free_y') + 
+    theme(strip.text.x = element_blank()) + 
+    xlab('Time (ms)') + 
+    scale_x_continuous(breaks = NULL, minor_breaks = NULL) + 
+    scale_y_continuous(breaks = NULL) +
+    ylab('Average response to best frequency')
+average_tuning <- 
+    df_change %>% 
+    mutate(norm_id = (centered_id - best_response)/6) %>% 
+    ggplot(aes(x = norm_id, y = normalized_spikerate)) + 
+    stat_summary(geom = 'linerange', fun.data = 'mean_cl_boot') + 
+    stat_summary(geom = 'line', fun.y = 'mean') + 
+    theme_bw() + 
+    xlim(-1.2,1.2) + 
+    ylab('Average spikerate') + 
+    xlab('Distance from best frequency (octaves)')
+widefield <- readPNG('figs/new.png') %>% rasterGrob(interpolate = TRUE)
+wrap_elements(widefield) + average_tuning + tuning_curves + trace + plot_annotation(tag_levels = 'a') + plot_layout(nrow = 2) + ggsave('figs/tuning_curves.png')
+```
+
+(ref:frequency-tuning) Frequency tuning in auditory cortex. **a** The recorded area in mouse M10. Shaded areas are pixels with significant responses (z-score$>1$) to 4 kHz (blue) and 25 kHz (red) SAM tones. Putative boundaries between A1 (left), AAF (bottom), and A2 (right) are indicated. Frequency-tuned neurons are shown shaded according to their best frequency (kHz). **b** Average tuning curve centered around the best frequency of all neurons. Lines indicate 95% confidence intervals. **c** Tuning curves with 95% confidence intervals of the most strongly tuned neurons as measured by a Kruskal-Wallis test. Frequency varies along the x axis and spike rate varies along the y axis. The scale of the y axis is not consistent across neurons and has been omitted for clarity. **d** Average spike rates in response to a best-frequency stimulus presented for 200 ms (represented by the shaded block). Time varies along the x axis and spike rate varies along the y axis. Again, the scale of the y axis is not consistent across neurons and has been omitted for clarity.
+
+### Sensorimotor Perturbations
+
+This section evaluates whether auditory cortex represents the sensorimotor contingency. This would be the case if the stimulus representation was different for sensorimotor perturbations compared to sounds that followed the contingency. In order to control for any neural effects driven by sound history statistics themselves, the responses to sensorimotor perturbations were compared to non-perturbed sounds with matched frequency and stimulus history (going back one stimulus).
+
+A Prentice-Wittkowski test over the full population of frequency-tuned neurons revealed that the spike rates elicited by perturbed stimuli were significantly different from those following non-perturbed stimuli ($\chi^2=5.3$,$p=0.02$). This suggests that the population of neurons recorded in this session indeed represents the sensorimotor contingency. Overall, the neurons appear more broadly tuned in the event of perturbed stimuli, though due to the limited sample size, this is difficult to assess using an averaged tuning curve (figure \@ref(fig:perturbation)d).
+
+```{r perturbation, fig.cap='(ref:perturbation)', fig.asp=1.4}
+df_center <- 
+    df_change
+kruskal_test <- kruskal.test(spikerate ~ is_perturbed, data = df_center)
+prentice_test <- 
+    prentice.test(df_center[['normalized_spikerate']], 
+                  df_center[['is_perturbed']], 
+                  paste(df_center[['change']], df_center[['centered_id']]))
+df_change_f09 <- feather::read_feather('data/gtmk444f-07-09/df_change.feather')
+df_normalization_f09 <- 
+    df_change_f09 %>% 
+    filter(norm_id == 0) %>% 
+    group_by(neuron_id) %>% 
+    summarise(normalization = mean(spikerate))
+df_change_f09 <- 
+    df_change_f09 %>% 
+    left_join(df_normalization_f09, by = 'neuron_id') %>% 
+    mutate(normalized_spikerate = spikerate/normalization)
+df_center_f09 <- df_change_f09
+prentice_test_f09 <- 
+    prentice.test(df_center_f09[['normalized_spikerate']], 
+                  df_center_f09[['is_perturbed']], 
+                  paste(df_center_f09[['change']], df_center_f09[['centered_id']]))
+df_center_g05 <- feather::read_feather('data/gtmk444g-07-05/df_change.feather')
+df_normalization_g05 <- 
+    df_center_g05 %>% 
+    filter(norm_id == 0) %>% 
+    group_by(neuron_id) %>% 
+    summarise(normalization = mean(spikerate))
+df_center_g05 <- 
+    df_center_g05 %>% 
+    left_join(df_normalization_g05, by = 'neuron_id') %>% 
+    mutate(normalized_spikerate = spikerate/normalization)
+prentice_test_g05 <- 
+    prentice.test(df_center_g05[['normalized_spikerate']], 
+                  df_center_g05[['is_perturbed']], 
+                  paste(df_center_g05[['change']], df_center_g05[['centered_id']]))
+no_perturbations <- 
+    df_center %>% 
+    group_by(neuron_id) %>% 
+    summarize(statistic = all(!is_perturbed)) %>% 
+    filter(statistic) %>% 
+    extract2('neuron_id')
+df_difference <- 
+    df_center %>% 
+    filter(!(neuron_id %in% no_perturbations)) %>% 
+    group_by(neuron_id) %>% 
+    summarize(statistic = prentice.test(normalized_spikerate, is_perturbed, paste(change, norm_id))$statistic,
+              effect = prentice.test(normalized_spikerate, is_perturbed, paste(change, norm_id))$effect,
+              p_value = prentice.test(normalized_spikerate, is_perturbed, paste(change, norm_id))$p.value)
+# Under a uniform distribution, how likely would we have gotten this distribution?
+# We measure that by looking at the median value
+n <- nrow(df_difference)
+test_stat <- sum(df_difference$p_value <= 0.05)/n
+sim_stat <- c()
+for (i in 1:10000) {
+    sim_stat <- c(sim_stat, sum(runif(n) <= 0.05)/n)
+}
+load('data/sim_stat.RData')
+percentile <- sum(sim_stat >= test_stat)/10000
+p_test <- 
+    ggplot(df_difference, aes(x = p_value)) + 
+    geom_histogram(binwidth = 0.05) + 
+    theme_bw()
+sim_df <- tibble(sim_stat = sim_stat)
+p_sim <- 
+    sim_df %>% 
+    group_by(sim_stat) %>% 
+    summarise(count = n()/nrow(sim_df)) %>% 
+    ggplot(aes(x = sim_stat, y = count)) + 
+    geom_bar(aes(fill = sim_stat >= test_stat), show.legend = FALSE,
+             stat = 'identity') + 
+    geom_vline(xintercept = test_stat) + 
+    scale_fill_manual(values = c(`TRUE` = 'orange', `FALSE` = 'grey40')) + 
+    theme_bw() + 
+    scale_y_continuous(labels = scales::percent) + 
+    ylab('Proportion') + 
+    xlab('Proportion of p values under 0.05')
+critical_neurons <-
+    df_difference %>% 
+    filter(p_value <= 0.1) %>% 
+    extract2('neuron_id')
+df_pert <- 
+    df_change %>% 
+    filter(neuron_id %in% critical_neurons)
+pert_tuning <- 
+    df_pert %>% 
+    mutate(frequency = freq_trans(centered_id)) %>% 
+    mutate(pert = if_else(is_perturbed, 'Perturbation', 'No perturbation')) %>% 
+    ggplot(aes(x = frequency, y = spikerate, linetype = pert)) + 
+    stat_summary(geom = 'linerange', fun.data = 'mean_cl_boot') + 
+    stat_summary(geom = 'line', fun.y = 'mean') + 
+    facet_wrap(~neuron_id, scales = 'free_y') + 
+    theme_bw() + 
+    scale_x_log10(minor_breaks = NULL) +
+    scale_y_continuous(breaks = NULL) +
+    labs(linetype = NULL, x = 'Frequency (kHz)', y = 'Spikerate') + 
+    theme(strip.text.x = element_blank(),
+          legend.position = 'none')
+df_best_response_2 <- feather::read_feather('data/df_best_response_2.feather')
+pert_response <- 
+    df_best_response_2 %>% 
+    filter(neuron_id %in% critical_neurons) %>% 
+    mutate(frequency = freq_trans(centered_id)) %>% 
+    mutate(pert = if_else(perturbation != 0, 'Perturbation', 'No perturbation')) %>% 
+    mutate(time = frame/29.7*1000) %>% 
+    ggplot(aes(x = time, y = spikes, linetype = pert)) + 
+    annotate('rect', xmin = 0, xmax = 200, ymin = -Inf, ymax = Inf, alpha = 0.5) + 
+    stat_summary(geom = 'line', fun.y = 'mean') + 
+    theme_bw() + 
+    facet_wrap(~neuron_id, scales = 'free_y') + 
+    theme(strip.text.x = element_blank(),
+          axis.text.x = element_text(),
+          axis.text.y = element_blank()) + 
+    xlab('Time (ms)') + 
+    scale_x_continuous(breaks = NULL, limits = c(-150, 300)) + 
+    scale_y_continuous(breaks = NULL) +
+    ylab('Average response to best frequency') +
+    labs(linetype = NULL) + 
+    theme(strip.text.x = element_blank(),
+          legend.position = 'top')
+df_1 <- feather::read_feather('data/df_1.feather')
+response_curve <- 
+    df_1 %>% 
+    filter(centered_id >= 0) %>% 
+    mutate(frequency = round(freq_trans(centered_id))) %>% 
+    mutate(pert = case_when(
+        perturbation < 0 ~ 'Expected higher sound',
+        perturbation == 0 ~ 'No perturbation',
+        perturbation > 0 ~ 'Expected lower sound'
+    )) %>% 
+    group_by(frame, frequency, pert) %>% 
+    summarise(spikes = mean(spikes)) %>% 
+    mutate(time = frame/29.7*1000) %>% 
+    ggplot(aes(x = time, y = spikes, linetype = pert, colour = pert)) + 
+    annotate('rect', xmin = 0, xmax = 200, ymin = -Inf, ymax = Inf, alpha = 0.5) + 
+    geom_line() + 
+    theme_bw() + 
+    xlab('Time (ms)') + 
+    ylab('Average response to frequency (Hz)') + 
+    scale_x_continuous(breaks = NULL, minor_breaks = NULL, limits = c(-150, 300)) + 
+    facet_wrap(~frequency, nrow = 1) + 
+    theme(legend.position = 'top', legend.key = element_rect(fill = 'grey'), legend.direction = 'vertical') + 
+    scale_linetype_manual(values = c(`No perturbation` = 1, `Expected higher sound` = 2, `Expected lower sound` = 2)) +
+    scale_color_manual(values = c(`No perturbation` = 'black', `Expected higher sound` = "#FFEA46FF", `Expected lower sound` = "purple")) +
+    labs(linetype = NULL, color = NULL)
+effect_plot <- df_difference %>% 
+    ggplot(aes(x = effect)) + 
+    geom_histogram() + 
+    theme_bw()
+whole_tuning <- df_pert %>% 
+    mutate(frequency = freq_trans(centered_id)) %>% 
+    mutate(pert = if_else(is_perturbed, 'Perturbation', 'No perturbation')) %>% 
+    ggplot(aes(x = norm_id, y = normalized_spikerate, linetype = pert)) + 
+    stat_summary(geom = 'linerange', fun.data = 'mean_cl_boot') + 
+    stat_summary(geom = 'line', fun.y = 'mean') + 
+    theme_bw() + 
+    ylab('Average spikerate (Hz)') + 
+    xlab('Logarithmic distance from best frequency') + 
+    labs(linetype = NULL) + 
+    xlim(-5, 5) +
+    theme(legend.position = 'none',
+          legend.box.background = element_rect(fill = 'transparent', color = 'transparent'), 
+          legend.background = element_rect(fill = 'transparent'),
+          legend.justification = c(0,1))
+(p_test + p_sim)/(pert_tuning + whole_tuning)/(pert_response+response_curve) + plot_annotation(tag_levels = 'a') + plot_layout(guides = 'collect') + ggsave('figs/perturbation_sensitivity.png')
+```
+(ref:perturbation) Representation of sensorimotor perturbations. **a** Distribution of the p values of the Prentice-Wittkowski test for each neuron. **b** Simulated distribution of proportions of p values under 0.05 if all underlying hypotheses were wrong. The proportion of p values under 0.05 in the given hypothesis test (marked in orange) is significantly higher than the null distribution. **c** Frequency tuning curves to perturbations and non-perturbations of neurons that are possibly sensitive to sensorimotor perturbations. **d** Average tuning curve around the best frequency for perturbations and no perturbations. **e** Average evoked response of the neurons from panel c, with and without perturbations. **f** Tuning curve of an example neuron.
+
+Next, the representation of sensorimotor perturbations was considered at the level of individual neurons. Applying the Prentice-Wittkowski test to single neurons yielded nine out of 69 frequency-tuned neurons with a p value of under 0.05.^[Note that on a neuronal level, the test has much less statistical power due to the strongly reduced sample size.] This was a higher number than what would have been expected due to random fluctuations: a permutation test with shuffled perturbations led to nine or more perturbation-sensitive neurons in less than 0.02% of the cases (i. e. p=0.0002) (figure \@ref(fig:perturbation)b). This is further evidence that auditory cortex indeed represents sensorimotor perturbations.
+
+Inspection of the neurons that were the most sensitive to perturbations reveals that in some cases, the perturbation modulated the amplitude of the neuronal response without affecting the frequency tuning, whereas in other cases, the response to sensorimotor perturbations was shifted in frequency. Figure \@ref(fig:perturbation)e visualizes the average response to a best-frequency stimulus that represents or does not represent a perturbation. In many cases, the perturbation modulates the response, either by making it stronger or weaker. However, other effects can be found as well. In particular, one example neuron showed a broader frequency tuning to sensorimotor perturbations (figure \@ref(fig:perturbation)f). Indeed, it was particularly sensitive to events whose expected sound was near the best-frequency stimulus, suggesting that it responded to a mixture of the presented and expected sound.
+
+In this manner, inspection of single neurons can shed light on possible mechanisms by which sensorimotor perturbations are represented. The analysis presented here does not allow us to validate or reject such hypothesized mechanisms. At this stage, however, it is possible to confirm that neurons in auditory cortex represented, in some way, sensorimotor perturbations differently from sounds within the contingency.

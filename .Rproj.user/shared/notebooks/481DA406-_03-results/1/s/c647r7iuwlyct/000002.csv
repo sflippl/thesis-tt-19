@@ -1,0 +1,1 @@
+"0","knitr::include_graphics(paste0('figs/', c('strat_event', 'strat_raster', 'strat_hist', 'strat_hist_f'), '.pdf'))"

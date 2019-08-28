@@ -1,0 +1,445 @@
+\begin{thebibliography}{}
+
+\bibitem[Aertsen et~al., 1981]{aertsen1981receptive}
+Aertsen, A.~M., Olders, J.~H., and Johannesma, P.~I. (1981).
+\newblock {Spectro-temporal receptive fields of auditory neurons in the
+  grassfrog. III. Analysis of the stimulus-event relation for natural stimuli.}
+\newblock {\em Biological cybernetics}, 39(3):195--209.
+
+\bibitem[Aertsen et~al., 1980]{aertsen1980receptive}
+Aertsen, A. M. H.~J., Johannesma, P. I.~M., and Hermes, D.~J. (1980).
+\newblock {Spectro-temporal receptive fields of auditory neurons in the
+  grassfrog}.
+\newblock {\em Biological Cybernetics}, 38(4):235--248.
+
+\bibitem[Allaire et~al., 2019]{R-rmarkdown}
+Allaire, J., Xie, Y., McPherson, J., Luraschi, J., Ushey, K., Atkins, A.,
+  Wickham, H., Cheng, J., Chang, W., and Iannone, R. (2019).
+\newblock {\em rmarkdown: Dynamic Documents for R}.
+\newblock R package version 1.15.
+
+\bibitem[Aronov et~al., 2017]{aronov2017grid}
+Aronov, D., Nevers, R., and Tank, D.~W. (2017).
+\newblock {Mapping of a non-spatial dimension by the hippocampal–entorhinal
+  circuit}.
+\newblock {\em Nature}, 543(7647):719--722.
+
+\bibitem[Bache and Wickham, 2014]{R-magrittr}
+Bache, S.~M. and Wickham, H. (2014).
+\newblock {\em magrittr: A Forward-Pipe Operator for R}.
+\newblock R package version 1.5.
+
+\bibitem[Behrens et~al., 2007]{behrens2007information}
+Behrens, T. E.~J., Woolrich, M.~W., Walton, M.~E., and Rushworth, M. F.~S.
+  (2007).
+\newblock {Learning the value of information in an uncertain world}.
+\newblock {\em Nature Neuroscience}, 10(9):1214--1221.
+
+\bibitem[Berkes et~al., 2011]{berkes2011spontaneous}
+Berkes, P., Orb{\'{a}}n, G., Lengyel, M., and Fiser, J. (2011).
+\newblock {Spontaneous cortical activity reveals hallmarks of an optimal
+  internal model of the environment}.
+\newblock {\em Science}.
+
+\bibitem[Bizley et~al., 2005]{bizley2005functional}
+Bizley, J.~K., Nodal, F.~R., Nelken, I., and King, A.~J. (2005).
+\newblock {Functional Organization of Ferret Auditory Cortex}.
+\newblock {\em Cerebral Cortex}, 15(10):1637--1653.
+
+\bibitem[Brainard, 1997]{brainard1997psychtoolbox}
+Brainard, D.~H. (1997).
+\newblock {The Psychophysics Toolbox}.
+\newblock {\em Spatial Vision}, 10:433--436.
+
+\bibitem[Chen et~al., 2013]{chen2013gcamp}
+Chen, T.-W., Wardill, T.~J., Sun, Y., Pulver, S.~R., Renninger, S.~L., Baohan,
+  A., Schreiter, E.~R., Kerr, R.~A., Orger, M.~B., Jayaraman, V., Looger,
+  L.~L., Svoboda, K., and Kim, D.~S. (2013).
+\newblock {Ultrasensitive fluorescent proteins for imaging neuronal activity}.
+\newblock {\em Nature}, 499(7458):295--300.
+
+\bibitem[Chu et~al., 2016]{chu2016balancing}
+Chu, M.~W., Li, W.~L., and Komiyama, T. (2016).
+\newblock {Balancing the robustness and efficiency of odor representations
+  during learning}.
+\newblock {\em Neuron}, 92(1):174--186.
+
+\bibitem[Constantinescu et~al., 2016]{constantinescu2016grid}
+Constantinescu, A.~O., O'Reilly, J.~X., and Behrens, T. E.~J. (2016).
+\newblock {Organizing conceptual knowledge in humans with a gridlike code.}
+\newblock {\em Science (New York, N.Y.)}, 352(6292):1464--1468.
+
+\bibitem[DiCarlo et~al., 2012]{dicarlo2012visual}
+DiCarlo, J.~J., Zoccolan, D., and Rust, N.~C. (2012).
+\newblock {How does the brain solve visual object recognition?}
+\newblock {\em Neuron}, 73(3):415--434.
+
+\bibitem[Eliades and Tsunada, 2018]{eliades2018auditory}
+Eliades, S.~J. and Tsunada, J. (2018).
+\newblock {Auditory cortical activity drives feedback-dependent vocal control
+  in marmosets}.
+\newblock {\em Nature Communications}, 9(1):2540.
+
+\bibitem[Ernst and Banks, 2002]{ernst2002humans}
+Ernst, M.~O. and Banks, M.~S. (2002).
+\newblock {Humans integrate visual and haptic information in a statistically
+  optimal fashion}.
+\newblock {\em Nature}, 415(6870):429--433.
+
+\bibitem[Fox and Wong, 2005]{fox2005comparison}
+Fox, K. and Wong, R. O.~L. (2005).
+\newblock {A comparison of experience-dependent plasticity in the visual and
+  somatosensory systems}.
+\newblock {\em Neuron}, 48(3):465--477.
+
+\bibitem[Fritz et~al., 2003]{fritz2003rapid}
+Fritz, J., Shamma, S., Elhilali, M., and Klein, D. (2003).
+\newblock {Rapid task-related plasticity of spectrotemporal receptive fields in
+  primary auditory cortex}.
+\newblock {\em Nature Neuroscience}, 6(11):1216--1223.
+
+\bibitem[Gallistel et~al., 2001]{gallistel2001rat}
+Gallistel, C.~R., Mark, T.~A., King, A.~P., and Latham, P.~E. (2001).
+\newblock {The rat approximates an ideal detector of changes in rates of
+  reward: Implications for the law of effect.}
+\newblock {\em Journal of Experimental Psychology: Animal Behavior Processes},
+  27(4):354--372.
+
+\bibitem[Gill et~al., 2008]{gill2008surprise}
+Gill, P., Woolley, S. M.~N., Fremouw, T., and Theunissen, F.~E. (2008).
+\newblock {What's That Sound? Auditory Area CLM Encodes Stimulus Surprise, Not
+  Intensity or Intensity Changes}.
+\newblock {\em Journal of Neurophysiology}, 99(6):2809--2820.
+
+\bibitem[Guizar-Sicairos et~al., 2008]{guizar2008subpixel}
+Guizar-Sicairos, M., Thurman, S.~T., and Fienup, J.~R. (2008).
+\newblock {Efficient subpixel image registration algorithms}.
+\newblock {\em Opt. Lett.}, 33(2):156--158.
+
+\bibitem[Hafting et~al., 2005]{hafting2005grid}
+Hafting, T., Fyhn, M., Molden, S., Moser, M.-B., and Moser, E.~I. (2005).
+\newblock {Microstructure of a spatial map in the entorhinal cortex}.
+\newblock {\em Nature}, 436(7052):801--806.
+
+\bibitem[Hodges and Lehmann, 1956]{hodges1956nonparametric}
+Hodges, J.~L. and Lehmann, E.~L. (1956).
+\newblock {The Efficiency of Some Nonparametric Competitors of the t-Test}.
+\newblock {\em The Annals of Mathematical Statistics}, 27(2):324--335.
+
+\bibitem[Hubel and Wiesel, 1965]{hubel1965receptive}
+Hubel, D.~H. and Wiesel, T.~N. (1965).
+\newblock {Receptive Fields and Functional Architecture in Two Nonstriate
+  Visual Areas (18 and 19) of the Cat}.
+\newblock {\em Journal of neurophysiology}, 28:229--89.
+
+\bibitem[Hubel and Wiesel, 1968]{hubel1968receptive}
+Hubel, D.~H. and Wiesel, T.~N. (1968).
+\newblock {Receptive fields and functional architecture of monkey striate
+  cortex}.
+\newblock {\em The Journal of Physiology}, 195(1):215--243.
+
+\bibitem[Issa et~al., 2014]{issa2014topographic}
+Issa, J.~B., Haeffele, B.~D., Agarwal, A., Bergles, D.~E., Young, E.~D., and
+  Yue, D.~T. (2014).
+\newblock {Multiscale Optical Ca2+ Imaging of Tonal Organization in Mouse
+  Auditory Cortex}.
+\newblock {\em Neuron}, 83(4):944--959.
+
+\bibitem[Jeanne et~al., 2013]{jeanne2013associative}
+Jeanne, J.~M., Sharpee, T.~O., and Gentner, T.~Q. (2013).
+\newblock {Associative learning enhances population coding by inverting
+  interneuronal correlation patterns.}
+\newblock {\em Neuron}, 78(2):352--63.
+
+\bibitem[Jones et~al., 2019]{scipy}
+Jones, E., Oliphant, T., Peterson, P., and Others (2019).
+\newblock {SciPy: Open source scientific tools for Python}.
+
+\bibitem[Keller et~al., 2012]{keller2012sensorimotor}
+Keller, G.~B., Bonhoeffer, T., and H{\"{u}}bener, M. (2012).
+\newblock {Sensorimotor Mismatch Signals in Primary Visual Cortex of the
+  Behaving Mouse}.
+\newblock {\em Neuron}, 74(5):809--815.
+
+\bibitem[Kleiner et~al., 2007]{kleiner2007psychtoolbox}
+Kleiner, M., Brainard, D.~H., and Pelli, D.~G. (2007).
+\newblock {"What's new in Psychtoolbox-3?"}.
+\newblock {\em Perception}, 36.
+
+\bibitem[K{\"{o}}rding et~al., 2004]{kording2004force}
+K{\"{o}}rding, K.~P., Ku, S.-p., and Wolpert, D.~M. (2004).
+\newblock {Bayesian Integration in Force Estimation}.
+\newblock {\em Journal of Neurophysiology}, 92(5):3161--3165.
+
+\bibitem[K{\"{o}}rding and Wolpert, 2004]{kording2004bayesian}
+K{\"{o}}rding, K.~P. and Wolpert, D.~M. (2004).
+\newblock {Bayesian integration in sensorimotor learning}.
+\newblock {\em Nature}, 427(6971):244--247.
+
+\bibitem[Kruskal and Wallis, 1952]{kruskal1952}
+Kruskal, W.~H. and Wallis, W.~A. (1952).
+\newblock {Use of Ranks in One-Criterion Variance Analysis}.
+\newblock {\em Journal of the American Statistical Association},
+  47(260):583--621.
+
+\bibitem[Larkum et~al., 1999]{larkum1999inhibition}
+Larkum, M.~E., Zhu, J.~J., and Sakmann, B. (1999).
+\newblock {A new cellular mechanism for coupling inputs arriving at different
+  cortical layers}.
+\newblock {\em Nature}, 398(6725):338--341.
+
+\bibitem[Leinweber et~al., 2017]{leinweber2017sensorimotor}
+Leinweber, M., Ward, D.~R., Sobczak, J.~M., Attinger, A., and Keller, G.~B.
+  (2017).
+\newblock {A Sensorimotor Circuit in Mouse Cortex for Visual Flow Predictions}.
+\newblock {\em Neuron}, 95(6):1420--1432.
+
+\bibitem[Liu et~al., 2019]{liu2019offset}
+Liu, J., Whiteway, M.~R., Sheikhattar, A., Butts, D.~A., Babadi, B., and
+  Kanold, P.~O. (2019).
+\newblock {Parallel Processing of Sound Dynamics across Mouse Auditory Cortex
+  via Spatially Patterned Thalamic Inputs and Distinct Areal Intracortical
+  Circuits}.
+\newblock {\em Cell Reports}, 27(3):872--885.e7.
+
+\bibitem[Low et~al., 2014]{low2014entorhinal}
+Low, R.~J., Gu, Y., and Tank, D.~W. (2014).
+\newblock {Cellular resolution optical access to brain regions in fissures:
+  imaging medial prefrontal cortex and grid cells in entorhinal cortex.}
+\newblock {\em Proceedings of the National Academy of Sciences of the United
+  States of America}, 111(52):18739--44.
+
+\bibitem[McKinney, 2010]{pandas}
+McKinney, W. (2010).
+\newblock {Data Structures for Statistical Computing in Python}.
+
+\bibitem[Miall and Wolpert, 1996]{miall1996forward}
+Miall, R.~C. and Wolpert, D.~M. (1996).
+\newblock {Forward Models for Physiological Motor Control}.
+\newblock {\em Neural Networks}, 9(8):1265--1279.
+
+\bibitem[Oliphant, 2006]{oliphant2006numpy}
+Oliphant, T.~E. (2006).
+\newblock {\em {Guide to NumPy}}.
+
+\bibitem[O'Reilly et~al., 2012]{oreilly2012bayesian}
+O'Reilly, J.~X., Jbabdi, S., and Behrens, T. E.~J. (2012).
+\newblock {How can a Bayesian approach inform neuroscience?}
+\newblock {\em European Journal of Neuroscience}, 35(7):1169--1179.
+
+\bibitem[Pachitariu et~al., 2017]{pachitariu2017suite2p}
+Pachitariu, M., Stringer, C., Schr{\"{o}}der, S., Dipoppa, M., Rossi, L.~F.,
+  Carandini, M., and Harris, K.~D. (2017).
+\newblock {Suite2p: beyond 10,000 neurons with standard two-photon microscopy}.
+\newblock {\em bioRxiv}.
+
+\bibitem[Pelli, 1997]{pelli1997psychtoolbox}
+Pelli, D.~G. (1997).
+\newblock {The VideoToolbox software for visual psychophysics: Transforming
+  numbers into movies}.
+\newblock {\em Spatial Vision}, 10:437--442.
+
+\bibitem[Peron et~al., 2015]{peron2015whiskers}
+Peron, S.~P., Freeman, J., Iyer, V., Guo, C., and Svoboda, K. (2015).
+\newblock {A Cellular Resolution Map of Barrel Cortex Activity during Tactile
+  Behavior}.
+\newblock {\em Neuron}, 86(3):783--799.
+
+\bibitem[Poulet and Hedwig, 2003]{poulet2003cricket}
+Poulet, J. F.~A. and Hedwig, B. (2003).
+\newblock {Corollary discharge inhibition of ascending auditory neurons in the
+  stridulating cricket.}
+\newblock {\em The Journal of neuroscience : the official journal of the
+  Society for Neuroscience}, 23(11):4717--25.
+
+\bibitem[Prentice and Pyke, 1979]{prentice1979test}
+Prentice, R.~L. and Pyke, R. (1979).
+\newblock {Logistic disease incidence models and case-control studies}.
+\newblock {\em Biometrika}, 66(3):403--411.
+
+\bibitem[Qin et~al., 2007]{qin2007offset}
+Qin, L., Chimoto, S., Sakai, M., Wang, J., and Sato, Y. (2007).
+\newblock {Comparison Between Offset and Onset Responses of Primary Auditory
+  Cortex on – off Neurons in Awake Cats}.
+\newblock {\em Journal of Neurophysiology}, 97(5):3421--3431.
+
+\bibitem[{R Core Team}, 2019]{R-base}
+{R Core Team} (2019).
+\newblock {\em R: A Language and Environment for Statistical Computing}.
+\newblock R Foundation for Statistical Computing, Vienna, Austria.
+
+\bibitem[Rao and Ballard, 1999]{rao1999pc}
+Rao, R. P.~N. and Ballard, D.~H. (1999).
+\newblock {Predictive coding in the visual cortex: a functional interpretation
+  of some extra-classical receptive-field effects}.
+\newblock {\em Nature Neuroscience}, 2(1):79--87.
+
+\bibitem[Robinson and Hayes, 2019]{R-broom}
+Robinson, D. and Hayes, A. (2019).
+\newblock {\em broom: Convert Statistical Analysis Objects into Tidy Tibbles}.
+\newblock R package version 0.5.2.
+
+\bibitem[Rossum, 1995]{python}
+Rossum, G. (1995).
+\newblock {Python reference manual}.
+
+\bibitem[Rubin et~al., 2016]{rubin2016representation}
+Rubin, J., Ulanovsky, N., Nelken, I., and Tishby, N. (2016).
+\newblock {The Representation of Prediction Error in Auditory Cortex}.
+\newblock {\em PLoS Computational Biology}, 12(8):1--28.
+
+\bibitem[Saxe et~al., 2019]{saxe2019semantic}
+Saxe, A.~M., McClelland, J.~L., and Ganguli, S. (2019).
+\newblock {A mathematical theory of semantic development in deep neural
+  networks.}
+\newblock {\em Proceedings of the National Academy of Sciences of the United
+  States of America}, 116(23):11537--11546.
+
+\bibitem[Schneider et~al., 2014]{schneider2014discharges}
+Schneider, D.~M., Nelson, A., and Mooney, R. (2014).
+\newblock {A synaptic and circuit basis for corollary discharge in the auditory
+  cortex}.
+\newblock {\em Nature}, 513(7517):189--194.
+
+\bibitem[Schneider et~al., 2018]{schneider2018cortical}
+Schneider, D.~M., Sundararajan, J., and Mooney, R. (2018).
+\newblock {A cortical filter that learns to suppress the acoustic consequences
+  of movement}.
+\newblock {\em Nature}, 561(7723):391--395.
+
+\bibitem[Slotnick, 2009]{slotnick2009lick}
+Slotnick, B. (2009).
+\newblock {A Simple 2-Transistor Touch or Lick Detector Circuit}.
+\newblock {\em Journal of the Experimental Analysis of Behavior},
+  91(2):253--255.
+
+\bibitem[Smith and Lewicki, 2006]{smith2006efficient}
+Smith, E.~C. and Lewicki, M.~S. (2006).
+\newblock {Efficient auditory coding}.
+\newblock {\em Nature}, 439(7079):978.
+
+\bibitem[Spinu et~al., 2018]{R-lubridate}
+Spinu, V., Grolemund, G., and Wickham, H. (2018).
+\newblock {\em lubridate: Make Dealing with Dates a Little Easier}.
+\newblock R package version 1.7.4.
+
+\bibitem[Sreenivasan and Fiete, 2011]{sreenivasan2011grid}
+Sreenivasan, S. and Fiete, I. (2011).
+\newblock {Grid cells generate an analog error-correcting code for singularly
+  precise neural computation}.
+\newblock {\em Nature Neuroscience}, 14(10):1330--1337.
+
+\bibitem[Srinivasan et~al., 1982]{srinivasan1982pc}
+Srinivasan, M.~V., Laughlin, S.~B., and Dubs, A. (1982).
+\newblock {Predictive Coding: A Fresh View of Inhibition in the Retina}.
+\newblock {\em Proceedings of the Royal Society of London. Series B, Biological
+  Sciences}, 216(1205):427--459.
+
+\bibitem[Stiebler et~al., 1997]{stiebler1997topographic}
+Stiebler, I., Neulist, R., Fichtel, I., and Ehret, G. (1997).
+\newblock {The auditory cortex of the house mouse: left-right differences,
+  tonotopic organization and quantitative analysis of frequency
+  representation}.
+\newblock {\em Journal of Comparative Physiology A: Sensory, Neural, and
+  Behavioral Physiology}, 181(6):559--571.
+
+\bibitem[Tolman, 1948]{tolman1948map}
+Tolman, E.~C. (1948).
+\newblock {Cognitive maps in rats and men.}
+\newblock {\em Psychological review}, 55(4):189--208.
+
+\bibitem[Urbanek, 2013]{R-png}
+Urbanek, S. (2013).
+\newblock {\em png: Read and write PNG images}.
+\newblock R package version 0.1-7.
+
+\bibitem[Ushey et~al., 2019]{R-reticulate}
+Ushey, K., Allaire, J., and Tang, Y. (2019).
+\newblock {\em reticulate: Interface to 'Python'}.
+\newblock R package version 1.13.
+
+\bibitem[van~der Walt et~al., 2011]{vanderwalt2011numpy}
+van~der Walt, S., Colbert, S.~C., and Varoquaux, G. (2011).
+\newblock {The NumPy Array: A Structure for Efficient Numerical Computation}.
+\newblock {\em Computing in Science {\&} Engineering}, 13(2):22--30.
+
+\bibitem[Weissenberger et~al., 2019]{weissenberger2019licks}
+Weissenberger, Y., King, A.~J., and Dahmen, J.~C. (2019).
+\newblock {Decoding mouse behavior to explain single-trial decisions and their
+  relationship with neural activity}.
+\newblock {\em bioRxiv}.
+
+\bibitem[Westerman and Smith, 1984]{westerman1984rapid}
+Westerman, L.~A. and Smith, R.~L. (1984).
+\newblock {Rapid and short-term adaptation in auditory nerve responses}.
+\newblock {\em Hearing Research}, 15(3):249--260.
+
+\bibitem[Wickham, 2019a]{R-feather}
+Wickham, H. (2019a).
+\newblock {\em feather: R Bindings to the Feather 'API'}.
+\newblock R package version 0.3.3.
+
+\bibitem[Wickham, 2019b]{R-stringr}
+Wickham, H. (2019b).
+\newblock {\em stringr: Simple, Consistent Wrappers for Common String
+  Operations}.
+\newblock R package version 1.4.0.
+
+\bibitem[Wickham et~al., 2019a]{R-ggplot2}
+Wickham, H., Chang, W., Henry, L., Pedersen, T.~L., Takahashi, K., Wilke, C.,
+  Woo, K., and Yutani, H. (2019a).
+\newblock {\em ggplot2: Create Elegant Data Visualisations Using the Grammar of
+  Graphics}.
+\newblock R package version 3.2.1.
+
+\bibitem[Wickham et~al., 2019b]{R-dplyr}
+Wickham, H., François, R., Henry, L., and Müller, K. (2019b).
+\newblock {\em dplyr: A Grammar of Data Manipulation}.
+\newblock R package version 0.8.3.
+
+\bibitem[Wickham and Henry, 2019]{R-tidyr}
+Wickham, H. and Henry, L. (2019).
+\newblock {\em tidyr: Easily Tidy Data with 'spread()' and 'gather()'
+  Functions}.
+\newblock R package version 0.8.3.
+
+\bibitem[Wittkowski, 2007]{wittkowski2007test}
+Wittkowski, K.~M. (2007).
+\newblock {Small Sample Properties of Rank Tests for Incomplete Unbalanced
+  Designs}.
+\newblock {\em Biometrical Journal}, 30(7):799--808.
+
+\bibitem[Wittkowski and Song, 2012]{R-muStat}
+Wittkowski, K.~M. and Song, T. (2012).
+\newblock {\em muStat: Prentice Rank Sum Test and McNemar Test}.
+\newblock R package version 1.7.0.
+
+\bibitem[Wolpert et~al., 1995]{wolpert1995internal}
+Wolpert, D., Ghahramani, Z., and Jordan, M. (1995).
+\newblock {An internal model for sensorimotor integration}.
+\newblock {\em Science}, 269(5232):1880--1882.
+
+\bibitem[Wood, 2016]{wood2016chick}
+Wood, J.~N. (2016).
+\newblock {A smoothness constraint on the development of object recognition}.
+\newblock {\em Cognition}, 153:140--145.
+
+\bibitem[Wood and Wood, 2018]{wood2018chick}
+Wood, J.~N. and Wood, S.~M. (2018).
+\newblock {The Development of Invariant Object Recognition Requires Visual
+  Experience With Temporally Smooth Objects}.
+\newblock {\em Cognitive Science}, 42(4):1391--1406.
+
+\bibitem[Xie, 2019a]{R-bookdown}
+Xie, Y. (2019a).
+\newblock {\em bookdown: Authoring Books and Technical Documents with R
+  Markdown}.
+\newblock R package version 0.13.
+
+\bibitem[Xie, 2019b]{R-knitr}
+Xie, Y. (2019b).
+\newblock {\em knitr: A General-Purpose Package for Dynamic Report Generation
+  in R}.
+\newblock R package version 1.24.
+
+\end{thebibliography}

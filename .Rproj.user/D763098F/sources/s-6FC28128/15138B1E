@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1565224618796.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "15138B1E",
+    "lastKnownWriteTime" : 1565772530,
+    "last_content_update" : 1565772530985,
+    "path" : "~/Documents/thesis-tt-19/thesis-tt-19/02-methods.Rmd",
+    "project_path" : "02-methods.Rmd",
+    "properties" : {
+        "cursorPosition" : "108,0",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 12,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

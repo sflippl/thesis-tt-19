@@ -1,0 +1,14 @@
+base
+reticulate
+feather
+ggplot2
+patchwork
+ggsignif
+dplyr
+muStat
+magrittr
+stringr
+lubridate
+tidyr
+png
+broom

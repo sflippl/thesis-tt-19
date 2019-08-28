@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1565776043738.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "C373ECB0",
+    "lastKnownWriteTime" : 1565776544,
+    "last_content_update" : 1565776544243,
+    "path" : "~/Documents/thesis-tt-19/thesis-tt-19/titlepage.tex",
+    "project_path" : "titlepage.tex",
+    "properties" : {
+        "cursorPosition" : "50,25",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 11,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "tex"
+}
